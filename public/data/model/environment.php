@@ -152,6 +152,14 @@ class Environment {
     public function returnEnvironmentAsArray() {
         $environment = array();
         $environment['id'] = $this->getId();
+        $environment['seawatch'] = $this->getSeaWatch();
+        $environment['start'] = $this->getStart();
+        $environment['end'] = $this->getEnd();
+        $environment['sea_state'] = $this->getSeaState();
+        $environment['swell_height'] = $this->getSwellHeight();
+        $environment['wind_direction'] = $this->getWindDirection();
+        $environment['visibilty'] = $this->getVisibility();
+        $environment['notes'] = $this->getNotes();
         
 
         return $environment;
