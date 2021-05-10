@@ -8,8 +8,7 @@ require_once('../model/Sighting.php');
 require_once('../model/Volunteer.php');
 
 try{
-    $writeDB = DB::connectWriteDB();
-    $readDB = DB::connectReadeDB();
+    $dB = DB::connectDB();
 } catch(PDOException $e) {
     error_log("Connection error - ".$e, 0);
     $response = new Response();
