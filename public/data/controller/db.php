@@ -1,7 +1,7 @@
 <?php
 
 /*
-The database connection
+The database connection controller
 */
 
 class DB {
