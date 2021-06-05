@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 27, 2021 at 01:53 PM
+-- Generation Time: May 31, 2021 at 10:01 AM
 -- Server version: 10.5.9-MariaDB
--- PHP Version: 7.4.16
+-- PHP Version: 7.4.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,6 +29,7 @@ USE `seawatch`;
 -- Table structure for table `behaviour`
 --
 
+DROP TABLE IF EXISTS `behaviour`;
 CREATE TABLE `behaviour` (
   `id` int(5) NOT NULL COMMENT 'the unique identifier for the behaiour',
   `behaviour` varchar(30) NOT NULL COMMENT 'the type of behaviour'
@@ -57,6 +58,7 @@ INSERT INTO `behaviour` (`id`, `behaviour`) VALUES
 -- Table structure for table `confidence`
 --
 
+DROP TABLE IF EXISTS `confidence`;
 CREATE TABLE `confidence` (
   `id` int(5) NOT NULL COMMENT 'the unique identifier for confidence',
   `name` varchar(60) NOT NULL COMMENT 'the confidence level for the sighting'
@@ -74,10 +76,11 @@ INSERT INTO `confidence` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `environmental_data`
+-- Table structure for table `environment`
 --
 
-CREATE TABLE `environmental_data` (
+DROP TABLE IF EXISTS `environment`;
+CREATE TABLE `environment` (
   `id` bigint(20) NOT NULL COMMENT 'the unique identifier for the data',
   `seawatch` bigint(20) NOT NULL COMMENT 'the unique seawatch identifier',
   `start` time NOT NULL COMMENT 'the start time',
@@ -95,6 +98,7 @@ CREATE TABLE `environmental_data` (
 -- Table structure for table `seawatch`
 --
 
+DROP TABLE IF EXISTS `seawatch`;
 CREATE TABLE `seawatch` (
   `id` bigint(20) NOT NULL COMMENT 'the unique identifier',
   `date` datetime NOT NULL COMMENT 'the date the seawatch was undertaken',
@@ -108,6 +112,7 @@ CREATE TABLE `seawatch` (
 -- Table structure for table `sea_state`
 --
 
+DROP TABLE IF EXISTS `sea_state`;
 CREATE TABLE `sea_state` (
   `id` int(5) NOT NULL COMMENT 'The unique identifier for the sea state',
   `state` int(2) NOT NULL COMMENT 'the sea state',
@@ -136,6 +141,7 @@ INSERT INTO `sea_state` (`id`, `state`, `description`) VALUES
 -- Table structure for table `sessions`
 --
 
+DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `id` bigint(20) NOT NULL COMMENT 'the unique identifier for the session',
   `volunteer` int(5) NOT NULL COMMENT 'the volunteer id the session is for',
@@ -151,6 +157,7 @@ CREATE TABLE `sessions` (
 -- Table structure for table `sighting`
 --
 
+DROP TABLE IF EXISTS `sighting`;
 CREATE TABLE `sighting` (
   `id` bigint(20) NOT NULL COMMENT 'the unique identifier for the sighting',
   `seawatch` bigint(20) NOT NULL COMMENT 'the seawatch id for the sighting',
@@ -173,6 +180,7 @@ CREATE TABLE `sighting` (
 -- Table structure for table `species`
 --
 
+DROP TABLE IF EXISTS `species`;
 CREATE TABLE `species` (
   `id` int(5) NOT NULL COMMENT 'the unique identifier for the species',
   `species` varchar(60) NOT NULL COMMENT 'the name of the species'
@@ -206,6 +214,7 @@ INSERT INTO `species` (`id`, `species`) VALUES
 -- Table structure for table `station`
 --
 
+DROP TABLE IF EXISTS `station`;
 CREATE TABLE `station` (
   `id` int(5) NOT NULL COMMENT 'the unique identifier for the station',
   `name` varchar(60) NOT NULL COMMENT 'the name of the seawatch station',
@@ -253,6 +262,7 @@ INSERT INTO `station` (`id`, `name`, `latitude`, `longitude`) VALUES
 -- Table structure for table `swell_height`
 --
 
+DROP TABLE IF EXISTS `swell_height`;
 CREATE TABLE `swell_height` (
   `id` int(5) NOT NULL COMMENT 'the unique identifier for the swell height',
   `type` varchar(15) NOT NULL COMMENT 'the description of the swell height',
@@ -274,6 +284,7 @@ INSERT INTO `swell_height` (`id`, `type`, `height`) VALUES
 -- Table structure for table `visibility`
 --
 
+DROP TABLE IF EXISTS `visibility`;
 CREATE TABLE `visibility` (
   `id` int(5) NOT NULL COMMENT 'the unique identifier for visibility',
   `distance` varchar(8) NOT NULL COMMENT 'the visability distance'
@@ -295,6 +306,7 @@ INSERT INTO `visibility` (`id`, `distance`) VALUES
 -- Table structure for table `volunteer`
 --
 
+DROP TABLE IF EXISTS `volunteer`;
 CREATE TABLE `volunteer` (
   `id` int(5) NOT NULL COMMENT 'the unique id for each volunteer',
   `first_name` varchar(40) NOT NULL COMMENT 'the volunteers first name',
@@ -310,6 +322,7 @@ CREATE TABLE `volunteer` (
 -- Table structure for table `wind_direction`
 --
 
+DROP TABLE IF EXISTS `wind_direction`;
 CREATE TABLE `wind_direction` (
   `id` int(5) NOT NULL COMMENT 'The unique reference to the direction',
   `direction` varchar(50) NOT NULL COMMENT 'the direction',
@@ -347,9 +360,9 @@ ALTER TABLE `confidence`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `environmental_data`
+-- Indexes for table `environment`
 --
-ALTER TABLE `environmental_data`
+ALTER TABLE `environment`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -429,9 +442,9 @@ ALTER TABLE `confidence`
   MODIFY `id` int(5) NOT NULL AUTO_INCREMENT COMMENT 'the unique identifier for confidence', AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `environmental_data`
+-- AUTO_INCREMENT for table `environment`
 --
-ALTER TABLE `environmental_data`
+ALTER TABLE `environment`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'the unique identifier for the data';
 
 --

@@ -4,7 +4,6 @@ class EnvironmentException extends Exception {}
 class Environment {
 
     private $_id;
-    private $_seaWatch;
     private $_start;
     private $_end;
     private $_seaState;
@@ -14,9 +13,8 @@ class Environment {
     private $_notes;
 
 
-    public function __construct($id, $seaWatch, $start, $end, $seaState, $swellHeight, $windDirection, $visibility, $notes ){
+    public function __construct($id,  $start, $end, $seaState, $swellHeight, $windDirection, $visibility, $notes ){
         $this->setId($id);
-        $this->setSeaWatch($seaWatch);
         $this->setStart($start);
         $this->setEnd($end);
         $this->setSeaState($seaState);
@@ -29,10 +27,6 @@ class Environment {
     //getters
     public function getId() {
         return $this->_id ;
-    }
-
-    public function getseaWatch() {
-        return $this->_seaWatch ;
     }
 
     public function getStart() {
@@ -75,14 +69,6 @@ class Environment {
         $this->_id = $id;
     }
 
-    public function setSeaWatch($seaWatch) {
-
-        if(($seaWatch !== null) && (!is_numeric($seaWatch) || $seaWatch <= 0 || $seaWatch > 9223372036854775807 || $this->_seaWatch !== null)) {
-            throw new EnvironmentException("seawatch error");
-        }
-
-        $this->_seaWatch = $seaWatch;
-    }
 
     public function setStart($start) {
 

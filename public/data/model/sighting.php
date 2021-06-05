@@ -4,7 +4,6 @@ class SightingException extends Exception {}
 class Sighting {
 
     private $_id;
-    private $_seaWatch;
     private $_firstSeen;
     private $_lastSeen;
     private $_species;
@@ -18,19 +17,18 @@ class Sighting {
     private $_associatedBirds;
 
 
-    public function __construct($id, $seaWatch, $firstSeen, $lastSeen, $species, $confidence, $groupSize, $calves, $juveniles, $bearing, $distance, $behaviour, $associatedBirds ){
+    public function __construct($id, $firstSeen, $lastSeen, $species, $confidence, $groupSize, $calves, $juveniles, $bearing, $distance, $behaviour, $associatedBirds ){
         $this->setId($id);
-        $this->setSeaWatch($seaWatch);
         $this->setFirstSeen($firstSeen);
         $this->setLastSeen($lastSeen);
-        $this->setSpeciies($species);
+        $this->setSpecies($species);
         $this->setConfidence($confidence);
         $this->setGroupSize($groupSize);
         $this->setCalves($calves);
         $this->setJuveniles($juveniles);
         $this->setBearing($bearing);
         $this->setDistance($distance);
-        $this->setBeaviour($behaviour);
+        $this->setBehaviour($behaviour);
         $this->setAssociatedBirds($associatedBirds);
 
     }
@@ -38,10 +36,6 @@ class Sighting {
     //getters
     public function getId() {
         return $this->_id ;
-    }
-
-    public function getseaWatch() {
-        return $this->_seaWatch ;
     }
 
     public function getFirstSeen() {
@@ -99,14 +93,7 @@ class Sighting {
         $this->_id = $id;
     }
 
-    public function setSeaWatch($seaWatch) {
-
-        if(($seaWatch !== null) && (!is_numeric($seaWatch) || $seaWatch <= 0 || $seaWatch > 9223372036854775807 || $this->_seaWatch !== null)) {
-            throw new SightingException("Seawatch id error");
-        }
-
-        $this->_seaWatch = $seaWatch;
-    }
+   
 
     public function setFirstSeen($firstSeen) {
 

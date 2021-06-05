@@ -4,7 +4,7 @@ require_once('../model/Response.php');
 
 /*
 Sign up a volunteer and add them to the database
-user created with post Json data consisting of
+Volunteer created with post Json data consisting of
 first_name, last_name, email, phone, password
 All fieds are required and fields validated before adding to the database
 Response sent to client using the response model and json data listing errors or success
