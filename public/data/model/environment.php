@@ -72,8 +72,8 @@ class Environment {
 
     public function setStart($start) {
 
-        if(($start !== null) && (!preg_match('/^[0-9]{2}:[0-9]{2}$', $start)  || $this->_start !== null)) {
-            throw new EnvironmentException("start time error");
+        if(($start !== null) &&  date_format(date_create_from_format('H:i', $start), 'H:i') != $start) {
+            throw new EnvironmentException("environment start error");
         }
 
         $this->_start = $start;
@@ -81,8 +81,8 @@ class Environment {
 
     public function setEnd($end) {
 
-        if(($end !== null) && (!preg_match('/^[0-9]{2}:[0-9]{2}$', $end) || $this->_end !== null)) {
-            throw new EnvironmentException("end time error");
+        if(($end !== null) &&  date_format(date_create_from_format('H:i', $end), 'H:i') != $end) {
+            throw new EnvironmentException("environment end error");
         }
 
         $this->_end = $end;
@@ -90,8 +90,8 @@ class Environment {
 
     public function setSeaState($seaState) {
 
-        if(($seaState !== null) && (!is_numeric($seaState) || $seaState <= 0 || $seaState > 9223372036854775807 || $this->_seaSState !== null)) {
-            throw new EnvironmentException("sea state error");
+        if(strlen($seaState <0) || strlen($seaState) > 60) {
+            throw new EnvironmentException("environment sea state error");
         }
 
         $this->_seaState = $seaState;
@@ -99,8 +99,8 @@ class Environment {
 
     public function setSwellHeight($swellHeight) {
 
-        if(($swellHeight !== null) && (!is_numeric($swellHeight) || $swellHeight <= 0 || $swellHeight > 9223372036854775807 || $this->_swellHeight !== null)) {
-            throw new EnvironmentException("swell height error");
+        if(strlen($swellHeight <0) || strlen($swellHeight) > 10) {
+            throw new EnvironmentException("environment seaswell height error");
         }
 
         $this->_swellHeight = $swellHeight;
@@ -108,8 +108,8 @@ class Environment {
 
     public function setWindDirection($windDirection) {
 
-        if(($windDirection !== null) && (!is_numeric($windDirection) || $windDirection <= 0 || $windDirection > 9223372036854775807 || $this->_windDirection !== null)) {
-            throw new EnvironmentException("wind direction error");
+        if(strlen($windDirection < 0) || strlen($windDirection) > 5) {
+            throw new EnvironmentException("environment wind direction error");
         }
 
         $this->_windDirection = $windDirection;
@@ -117,8 +117,8 @@ class Environment {
 
     public function setVisibility($visibilty) {
 
-        if(($visibilty !== null) && (!is_numeric($visibilty) || $visibilty <= 0 || $visibilty > 9223372036854775807 || $this->_visibilty !== null)) {
-            throw new EnvironmentException("visibility error");
+        if(strlen($visibility < 0) || strlen($visibility) > 10) {
+            throw new EnvironmentException("environment visibility error");
         }
 
         $this->_visibility = $visibilty;
@@ -126,8 +126,9 @@ class Environment {
 
     public function setNotes($notes) {
 
-        if(($notes !== null) && (!is_numeric($notes) || $notes <= 0 || $notes > 9223372036854775807 || $this->_notes !== null)) {
-            throw new EnvironmentException("notes error");
+       
+        if(($notes !== null) && (strlen($notes) > 16777215)) {
+            throw new TaskException("task description error");
         }
 
         $this->_notes = $notes;

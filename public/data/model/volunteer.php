@@ -50,7 +50,7 @@ class Volunteer {
     public function setId($id) {
 
         if(($id !== null) && (!is_numeric($id) || $id <= 0 || $id > 9223372036854775807 || $this->_id !== null)) {
-            throw new VolunteerchException("volunteer ID error");
+            throw new VolunteerException("volunteer ID error");
         }
 
         $this->_id = $id;
@@ -58,8 +58,8 @@ class Volunteer {
 
     public function setFirstName($firstName) {
 
-        if(($firstName !== null) && (!is_numeric($firstName) || $firstName <= 0 || $firstName > 9223372036854775807 || $this->_firstName !== null)) {
-            throw new VolunteerException("invalid first name");
+        if(strlen($firstName <0) || strlen($firstName) > 255) {
+            throw new VolunteerException("volunteer first name error");
         }
 
         $this->_firstName = $firstName;
@@ -67,8 +67,8 @@ class Volunteer {
 
     public function setLastName($lastName) {
 
-        if(($lastName !== null) && (!preg_match('/^[0-9]{2}:[0-9]{2}$', $lastName)  || $this->_lastName !== null)) {
-            throw new VolunteerException("start time error");
+        if(strlen($lastName <0) || strlen($lastName) > 255) {
+            throw new VolunteerException("volunteer last name error");
         }
 
         $this->_lastName = $lastName;
@@ -76,8 +76,8 @@ class Volunteer {
 
     public function setEmail($email) {
 
-        if(($email !== null) && (!preg_match('/^[0-9]{2}:[0-9]{2}$', $email) || $this->_email !== null)) {
-            throw new VolunteerException("invalid email");
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new VolunteerException("volunteer email error");
         }
 
         $this->_email = $email;
@@ -85,17 +85,17 @@ class Volunteer {
 
     public function setPhone($phone) {
 
-        if(($phone !== null) && (!preg_match('/^[0-9]{2}:[0-9]{2}$', $phone) || $this->_phone !== null)) {
-            throw new VolunteerException("invalid email");
-        }
+        if(strlen($phone <0) || strlen($phone) > 255) {
+            throw new VolunteerException("volunteer last name error");
+        }  // check this one
 
         $this->_phone = $phone;
     }
     public function setPassword($password) {
 
-        if(($password !== null) && (!preg_match('/^[0-9]{2}:[0-9]{2}$', $password) || $this->_password !== null)) {
-            throw new VolunteerException("invalid email");
-        }
+        if(strlen($password <0) || strlen($password) > 255) {
+            throw new VolunteerException("volunteer password error");
+        }  // 
 
         $this->_password = $password;
     }

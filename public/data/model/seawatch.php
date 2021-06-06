@@ -47,26 +47,26 @@ class SeaWatch {
 
     public function setDate($date) {
 
-        if(($date !== null) && (!is_numeric($date) || $date <= 0 || $date > 9223372036854775807 || $this->_date !== null)) {
-            throw new SeaWatchException("invalid date");
+        if(($date !== null) &&  date_format(date_create_from_format('d/m/Y H:i', $date), 'd/m/Y H:i') != $date) {
+            throw new SeawatchException("task datetime error");
         }
 
         $this->_date = $date;
+    
     }
 
     public function setStation($station) {
 
-        if(($station !== null) && (!preg_match('/^[0-9]{2}:[0-9]{2}$', $station)  || $this->_station !== null)) {
-            throw new SeaWatchException("start time error");
+        if(strlen($station <0) || strlen($station) > 255) {
+            throw new SeawatchException("Seawatch Station error");
         }
-
         $this->_station = $station;
     }
 
     public function setVolunteer($volunteer) {
 
-        if(($volunteer !== null) && (!preg_match('/^[0-9]{2}:[0-9]{2}$', $volunteer) || $this->_volunteer !== null)) {
-            throw new EnvironmentException("end time error");
+        if(($volunteer !== null) && (!is_numeric($volunteer) || $volunteer <= 0 || $volunteer > 9223372036854775807 || $this->_volunteer !== null)) {
+            throw new SeaWatchException("Volunteer error");
         }
 
         $this->_volunteer = $volunteer;
@@ -78,6 +78,7 @@ class SeaWatch {
         $seaWatch['id'] = $this->getId();
         $seaWatch['date'] = $this->getDate();
         $seaWatch['station'] = $this->getStation();
+        $seawatch['volunteer'] = $this->getVolunteer();
         
 
         return $seaWatch;
