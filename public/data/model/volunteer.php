@@ -15,7 +15,7 @@ class Volunteer {
         $this->setId($id);
         $this->setFirstName($firstName);
         $this->setlastName($lastName);
-        $this->setemail($volunteer);
+        $this->setemail($email);
         $this->setPhone($phone);
         $this->setPassword($password);
     }

@@ -98,7 +98,7 @@ class Sighting {
     public function setFirstSeen($firstSeen) {
 
         if(($firstSeen !== null) &&  date_format(date_create_from_format('H:i', $firstSeen), 'H:i') != $firstSeen) {
-            throw new SightingsException("Sightings start time datetime error");
+            throw new SightingException("Sightings start time datetime error");
         }
 
         $this->_firstSeen = $firstSeen;
@@ -107,7 +107,7 @@ class Sighting {
     public function setLastSeen($lastSeen) {
 
         if(($lastSeen !== null) &&  date_format(date_create_from_format('H:i', $lastSeen), 'H:i') != $lastSeen) {
-            throw new SightingsException("Sightings end time datetime error");
+            throw new SightingException("Sightings end time datetime error");
         }
 
         $this->_lastSeen = $lastSeen;
@@ -116,7 +116,7 @@ class Sighting {
     public function setSpecies($species) {
 
         if(strlen($species <0) || strlen($species) > 255) {
-            throw new SightingsException("sightings species error");
+            throw new SightingException("sightings species error");
         }
 
         $this->_species = $species;
@@ -125,7 +125,7 @@ class Sighting {
     public function setConfidence($confidence) {
 
         if(strlen($confidence <0) || strlen($confidence) > 255) {
-            throw new SightingsException("sightings confidence error");
+            throw new SightingException("sightings confidence error");
         }
 
         $this->_confidence = $confidence;
@@ -160,8 +160,8 @@ class Sighting {
 
     public function setBearing($bearing) {
 
-        if(strlen($bearinge <0) || strlen($confidence) > 30) {
-            throw new SightingsException("sightings bearing error");
+        if(strlen($bearing <0) || strlen($bearing) > 30) {
+            throw new SightingException("sightings bearing error");
         }
 
         $this->_bearing = $bearing;
@@ -169,7 +169,7 @@ class Sighting {
 
     public function setDistance($distance) {
 
-        if(($distance !== null) && (!is_numeric($distance) || $distances <= 0 || $distance > 9223372036854775807 || $this->_distance !== null)) {
+        if(($distance !== null) && (!is_numeric($distance) || $distance <= 0 || $distance > 9223372036854775807 || $this->_distance !== null)) {
             throw new SightingException("distance from station error");
         }
 
@@ -179,7 +179,7 @@ class Sighting {
     public function setBehaviour($behaviour) {
 
         if(strlen($behaviour <0) || strlen($behaviour) > 255) {
-            throw new SightingsException("sightings behaviour error");
+            throw new SightingException("sightings behaviour error");
         }
 
         $this->_behaviour = $behaviour;
@@ -188,7 +188,7 @@ class Sighting {
     public function setAssociatedBirds($associatedBirds) {
         
         if(($associatedBirds !== null) && (strlen($associatedBirds) > 16777215)) {
-            throw new TaskException("task description error");
+            throw new SightingException("task description error");
         }
 
         $this->_associatedBirds = $associatedBirds;
