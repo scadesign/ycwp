@@ -16,7 +16,7 @@ try{
 
 if(array_key_exists("task", $_GET)) {
     $task = $_GET['task'];
-    if($taskid == '' || is_numeric($taskid)){
+    if($task == '' || is_numeric($taskid)){
         $response = new Response();
         $response->setHttpStatusCode(400);
         $response->setSuccess(false);
