@@ -7,6 +7,10 @@ require_once('../model/SeaWatch.php');
 require_once('../model/Sighting.php');
 require_once('../model/Volunteer.php');
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(-1);
+
 try {
     $dB = DB::connectDB();
 } catch (PDOException $e) {
@@ -20,59 +24,60 @@ try {
 }
 
 
-// check the volunteer has aready signed in
-if (!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION']) < 1) {
-    $response = new Response();
-    $response->setHttpStatusCode(401);
-    $response->setSuccess(false);
-    (!isset($_SERVER['HTTP_AUTHORIZATION']) ? $response->addMessage("Access token is missing from the header") : false);
-    (strlen($_SERVER['HTTP_AUTHORIZATION']) < 1 ? $response->addMessage("Access token cannot be blank") : false);
-    $response->send();
-    exit;
-}
 
-$access_token = $_SERVER['HTTP_AUTHORIZATION'];
-
-try {
-
-    $query = $dB->prepare('select volunteer, accesstokenexpiry from sessions, volunteer where sessions.volunteer = volunteer.id and accesstoken = :accesstoken');
-    $query->bindParam(':accesstoken', $access_token, PDO::PARAM_STR);
-    $query->execute();
-
-    $rowCount = $query->rowCount();
-
-    if ($rowCount === 0) {
-        $response = new Response();
-        $response->setHttpStatusCode(401);
-        $response->setSuccess(false);
-        $response->addMessage("Invalid access token");
-        $response->send();
-        exit;
-    }
-
-    $row = $query->fetch(PDO::FETCH_ASSOC);
-    $returned_userid = $row['volunteer'];
-    $returned_accesstokenexpiry = $row['accesstokenexpiry'];
-
-    if (strtotime($returned_accesstokenexpiry) < time()) {
-        $response = new Response();
-        $response->setHttpStatusCode(401);
-        $response->setSuccess(false);
-        $response->addMessage("Access token expired");
-        $response->send();
-        exit;
-    }
-} catch (PDOException $e) {
-    $response = new Response();
-    $response->setHttpStatusCode(500);
-    $response->setSuccess(false);
-    $response->addMessage("There was an issue authenticating - please try again");
-    $response->send();
-    exit;
-}
-// end auth script
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // check the volunteer has aready signed in
+    if (!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION']) < 1) {
+        $response = new Response();
+        $response->setHttpStatusCode(401);
+        $response->setSuccess(false);
+        (!isset($_SERVER['HTTP_AUTHORIZATION']) ? $response->addMessage("Access token is missing from the header") : false);
+        (strlen($_SERVER['HTTP_AUTHORIZATION']) < 1 ? $response->addMessage("Access token cannot be blank") : false);
+        $response->send();
+        exit;
+    }
+
+    $access_token = $_SERVER['HTTP_AUTHORIZATION'];
+
+    try {
+
+        $query = $dB->prepare('select volunteer, access_expiry from sessions, volunteer where sessions.volunteer = volunteer.id and access_token = :accesstoken');
+        $query->bindParam(':accesstoken', $access_token, PDO::PARAM_STR);
+        $query->execute();
+
+        $rowCount = $query->rowCount();
+
+        if ($rowCount === 0) {
+            $response = new Response();
+            $response->setHttpStatusCode(401);
+            $response->setSuccess(false);
+            $response->addMessage("Invalid access token");
+            $response->send();
+            exit;
+        }
+
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        $returned_userid = $row['volunteer'];
+        $returned_accesstokenexpiry = $row['access_expiry'];
+
+        if (strtotime($returned_accesstokenexpiry) < time()) {
+            $response = new Response();
+            $response->setHttpStatusCode(401);
+            $response->setSuccess(false);
+            $response->addMessage("Access token expired");
+            $response->send();
+            exit;
+        }
+    } catch (PDOException $e) {
+        $response = new Response();
+        $response->setHttpStatusCode(500);
+        $response->setSuccess(false);
+        $response->addMessage("There was an issue authenticating - please try again" . $e);
+        $response->send();
+        exit;
+    }
+    // end auth script
 
     try {
         // check there is data and it is valid json
@@ -127,39 +132,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
         // get the seawatch id to include in the environment and sightings table
-        $lastSeawatchId = $writeDB->lastInsertId();
+        $lastSeawatchId = $dB->lastInsertId();
 
         // insert the environmental data
 
-        $environment = $jsonData->environment;
+        $environment = (array) $jsonData->environment;
+        $envLength = count($environment);
         // itterate through all the environment datas and insert into the envirnment table
-        for ($i = 0; $i < sizeOf($environment); $i++) {
-
+        for ($i = 0; $i < $envLength; $i++) {
 
 
             try {
                 //get the data
-                $start = trim($environment[$i]['start']);
-                $end = trim($environment[$i]['end']);
-                $seaState = trim($environment[$i]['seastate']);
-                $swellHeight = trim($environment[$i]['swellheight']);
-                $windDirection = trim($environment[$i]['windDirection']);
-                $visibility = trim($environment[$i]['visibility']);
-                $notes = trim($environment[$i]['notes']);
+                $env = (array) $environment[$i];
+                $start = trim($env['start']);
+                $end = trim($env['end']);
+                $seaState = trim($env['seastate']);
+                $swellHeight = trim($env['swellheight']);
+                $windDirection = trim($env['winddirection']);
+                $visibility = trim($env['visibility']);
+                $notes = trim($env['notes']);
 
                 $env = new Environment(null, $start, $end, $seaState, $swellHeight, $windDirection, $visibility, $notes);
+                $returnedSeaState = $env->getSeaState();
+                $returnedSwellHeight = $env->getSwellHeight();
+                $returnedWindDirection = $env->getWindDirection();
+                $returnedVisibilty = $env->getVisibility();
+                $returnedStart = $env->getStart();
+                $returnedEnd = $env->getEnd();
+                $returnedNotes = $env->getNotes();
 
                 // select the ids for the selections
                 $query = $dB->prepare('select sea_state.id as sea_state, swell_height.id as swell_height, wind_direction.id as wind_direction, visibility.id as visibility from sea_state, swell_height, wind_direction, visibility 
-                                    where sea_state.state = :seastate AND swell_height.type = :swellheight AND wind_direction.abbreviation = :winddirection AND visibilty.distance = :distance');
-                $query->bindParam(':seastate', $env->getSeaState(), PDO::PARAM_STR);
-                $query->bindParam(':swellheight', $env->getSwellHeight(), PDO::PARAM_STR);
-                $query->bindParam(':winddirection', $env->getWindDirection(), PDO::PARAM_STR);
-                $query->bindParam(':visibility', $env->getVisibility(), PDO::PARAM_STR);
+                                    where sea_state.state = :seastate AND swell_height.type = :swellheight AND wind_direction.abbreviation = :winddirection AND visibility.distance = :visibility');
+                $query->bindParam(':seastate', $returnedSeaState, PDO::PARAM_STR);
+                $query->bindParam(':swellheight', $returnedSwellHeight, PDO::PARAM_STR);
+                $query->bindParam(':winddirection', $returnedWindDirection, PDO::PARAM_STR);
+                $query->bindParam(':visibility', $returnedVisibilty, PDO::PARAM_STR);
                 $query->execute();
 
                 $rowCount = $query->rowCount();
-                // if the volunteer is not found
+                // if an insert is not made
                 if ($rowCount === 0) {
                     $response = new Response();
                     $response->setHttpStatusCode(401);
@@ -171,7 +184,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $row = $query->fetch(PDO::FETCH_ASSOC);
                 // assign the ids for insertion
-                $seaWatch_id =  $lastSeawatchId;
                 $returned_sea_state = $row['sea_state'];
                 $returned_swell_height = $row['swell_height'];
                 $returned_wind_direction = $row['wind_direction'];
@@ -179,14 +191,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $query = $dB->prepare('insert into environment (seawatch, start, end, sea_state, swell_height, wind_direction, visibility, additional_notes) 
                                         values (:seawatch, STR_TO_DATE(:start, \'%H:%i\'), STR_TO_DATE(:end, \'%H:%i\'), :seastate, :swellheight, :winddirection, :visibility, :notes )');
-                $query->bindParam(':seawatch', $seawatch_id, PDO::PARAM_INT);
-                $query->bindParam(':start', $env->getStart(), PDO::PARAM_STR);
-                $query->bindParam(':end', $env->getEnd(), PDO::PARAM_STR);
+                $query->bindParam(':seawatch', $lastSeawatchId, PDO::PARAM_INT);
+                $query->bindParam(':start', $returnedStart, PDO::PARAM_STR);
+                $query->bindParam(':end', $returnedEnd, PDO::PARAM_STR);
                 $query->bindParam(':seastate', $returned_sea_state, PDO::PARAM_INT);
                 $query->bindParam(':swellheight', $returned_swell_height, PDO::PARAM_INT);
                 $query->bindParam(':winddirection', $returned_wind_direction, PDO::PARAM_INT);
                 $query->bindParam(':visibility', $returned_visibility, PDO::PARAM_INT);
-                $query->bindParam(':notes', $env->getNotes(), PDO::PARAM_STR);
+                $query->bindParam(':notes', $returnedNotes, PDO::PARAM_STR);
                 $query->execute();
 
                 //check the insertion went ok and send message if not
@@ -203,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $response = new Response();
                 $response->setHttpStatusCode(500);
                 $response->setSuccess(false);
-                $response->addMessage("There was an issue matching some data");
+                $response->addMessage("There was an issue matching some data" . $e);
                 $response->send();
                 exit;
             }
@@ -212,37 +224,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // add any sightings
         $sightings = $jsonData->sightings;
+        $sightingsLength = count($sightings);
         // itterate through all the environment datas and insert into the envirnment table
-        if (!empty($sightings)) {
-            for ($i = 0; $i < sizeOf($sightings); $i++) {
+        if ($sightingsLength > 0) {
+            for ($i = 0; $i < $sightingsLength; $i++) {
                 try {
                     //get the data
-                    $firstSeen = trim($sightings[$i]['first_seen']);
-                    $lastSeen = trim($sightings[$i]['last_seen']);
-                    $species = trim($sightings[$i]['species']);
-                    $confidence = trim($sightings[$i]['confidence']);
-                    $groupSize = trim($sightings[$i]['group_size']);
-                    $calves = trim($sightings[$i]['calves']);
-                    $juveniles = trim($sightings[$i]['juveniles']);
-                    $bearing = trim($sightings[$i]['bearing']);
-                    $distance = trim($sightings[$i]['distance']);
-                    $behaviour = trim($sightings[$i]['behaviour']);
-                    $associatedBirds = trim($sightings[$i]['associated_birds']);
+                    $sighting = (array) $sightings[$i];
+                    $firstSeen = trim($sighting['firstseen']);
+                    $lastSeen = trim($sighting['lastseen']);
+                    $species = trim($sighting['species']);
+                    $confidence = trim($sighting['confidence']);
+                    $groupSize = trim($sighting['groupsize']);
+                    $calves = trim($sighting['calves']);
+                    $juveniles = trim($sighting['juveniles']);
+                    $bearing = trim($sighting['bearing']);
+                    $distance = trim($sighting['distance']);
+                    $behaviour = trim($sighting['behaviour']);
+                    $associatedBirds = trim($sighting['associatedbirds']);
 
                     // create a new sighting object
-                    $sighting = new Sighting(null, $firstSeen, $lastSeen, $species, $confidence, $groupSize, $calves, $juveniles, $bearing, $distance, $behaviour, $associatedBirds);
+                    $sightingModel = new Sighting(null, $firstSeen, $lastSeen, $species, $confidence, $groupSize, $calves, $juveniles, $bearing, $distance, $behaviour, $associatedBirds);
+
+                    $returnedFirstSeen = $sightingModel->getFirstSeen();
+
+                    $returnedLastSeen = $sightingModel->getLastSeen();
+
+                    $returnedSpecies = $sightingModel->getSpecies();
+                    $returnedConfidence = $sightingModel->getConfidence();
+                    $returnedGroupSize = $sightingModel->getGroupSize();
+                    $returnedCalves = $sightingModel->getCalves();
+                    $returnedjuveniles = $sightingModel->getJuveniles();
+                    $returnedBearing = $sightingModel->getBearing();
+                    $returnedDistance = $sightingModel->getDistance();
+                    $returnedBehaviour = $sightingModel->getBehaviour();
+                    $returnedAsscBirds = $sightingModel->getAssociatedBirds();
 
                     // select the ids for the selections
                     $query = $dB->prepare('select species.id as species, confidence.id as confidence, wind_direction.id as bearing, behaviour.id as behaviour from species, confidence, wind_direction, behaviour 
                                     where species.species = :species AND confidence.name = :confidence AND wind_direction.abbreviation = :bearing AND behaviour.behaviour = :behaviour');
-                    $query->bindParam(':species', $sighting->getSpecies(), PDO::PARAM_STR);
-                    $query->bindParam(':confidence', $sighting->getCalves(), PDO::PARAM_STR);
-                    $query->bindParam(':bearing', $sighting->getBearing(), PDO::PARAM_STR);
-                    $query->bindParam(':behaviour', $sighting->getBehaviour(), PDO::PARAM_STR);
+                    $query->bindParam(':species', $returnedSpecies, PDO::PARAM_STR);
+                    $query->bindParam(':confidence', $returnedConfidence, PDO::PARAM_STR);
+                    $query->bindParam(':bearing', $returnedBearing, PDO::PARAM_STR);
+                    $query->bindParam(':behaviour', $returnedBehaviour, PDO::PARAM_STR);
                     $query->execute();
 
                     $rowCount = $query->rowCount();
-                    // if the volunteer is not found
+                    // if an insertion wasn't made
                     if ($rowCount === 0) {
                         $response = new Response();
                         $response->setHttpStatusCode(401);
@@ -256,26 +284,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $row = $query->fetch(PDO::FETCH_ASSOC);
                     // assign the returned id's
-                    $seaWatch_id =  $lastSeawatchId;
                     $returned_species_id = $row['species'];
                     $returned_confidence_id = $row['confidence'];
                     $returned_bearing_id = $row['bearing'];
                     $returned_behaviour_id = $row['behaviour'];
 
+
+
                     $query = $dB->prepare('insert into sighting (seawatch, first_seen, last_seen, species, confidence, group_size, calves, juveniles, bearing, distance, behaviour, associated_birds) 
-                                        values (:seawatch, STR_TO_DATE(:firstseen, \'%H:%i\'), STR_TO_DATE(:lastseen, \'%H:%i\'), :species, :confidence, :groupsize, :calves, :juveniles, :bearing, :distance, : behaviour, :associatedbirds )');
-                    $query->bindParam(':seawatch', $seawatch_id, PDO::PARAM_INT);
-                    $query->bindParam(':firstseen', $sighting->getFirstSeen(), PDO::PARAM_STR);
-                    $query->bindParam(':lastseen', $sighting->getLastSeen(), PDO::PARAM_STR);
+                                        values (:seawatch, STR_TO_DATE(:firstseen, \'%H:%i\'), STR_TO_DATE(:lastseen, \'%H:%i\'), :species, :confidence, :groupsize, :calves, :juveniles, :bearing, :distance, :behaviour, :associatedbirds )');
+                    $query->bindParam(':seawatch', $lastSeawatchId, PDO::PARAM_INT);
+                    $query->bindParam(':firstseen', $returnedFirstSeen, PDO::PARAM_STR);
+                    $query->bindParam(':lastseen', $returnedLastSeen, PDO::PARAM_STR);
                     $query->bindParam(':species', $returned_species_id, PDO::PARAM_INT);
                     $query->bindParam(':confidence', $returned_confidence_id, PDO::PARAM_INT);
-                    $query->bindParam(':groupsize', $sighting->getGroupSize(), PDO::PARAM_INT);
-                    $query->bindParam(':calves', $sighting->getCalves(), PDO::PARAM_INT);
-                    $query->bindParam(':juveniles', $sighting->getJuveniles(), PDO::PARAM_INT);
+                    $query->bindParam(':groupsize', $returnedGroupSize, PDO::PARAM_INT);
+                    $query->bindParam(':calves', $returnedCalves, PDO::PARAM_INT);
+                    $query->bindParam(':juveniles', $returnedjuveniles, PDO::PARAM_INT);
                     $query->bindParam(':bearing', $returned_bearing_id, PDO::PARAM_INT);
-                    $query->bindParam(':distance', $sighting->getDistance(), PDO::PARAM_INT);
+                    $query->bindParam(':distance', $returnedDistance, PDO::PARAM_INT);
                     $query->bindParam(':behaviour', $returned_behaviour_id, PDO::PARAM_INT);
-                    $query->bindParam(':associatedbirds', $sighting->getAssociatedBirds(), PDO::PARAM_STR);
+                    $query->bindParam(':associatedbirds', $returnedAsscBirds, PDO::PARAM_STR);
 
                     $query->execute();
 
@@ -293,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $response = new Response();
                     $response->setHttpStatusCode(500);
                     $response->setSuccess(false);
-                    $response->addMessage("There was an issue matching some sightings data");
+                    $response->addMessage("There was an issue matching some sightings data" . $e);
                     $response->send();
                     exit;
                 }
@@ -302,7 +331,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // create and send a reponse that evrything went ok
             $response = new Response();
             $response->setHttpStatusCode(200);
-            $response->setSuccess(false);
+            $response->setSuccess(True);
             $response->addMessage("SeaWatch submitted successfully");
             $response->send();
             exit;
@@ -347,45 +376,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-        $id = $row['id'];
-        $station = $row['name'];
-        $latitude = $row['latitude'];
-        $longitude = $ow['longitude'];
+        $stationId = $row['id'];
 
-        if (array_key_exists("filter", $_GET)) {
-            // if a species filter exists
-            $species = $_GET['filter'];
-            $query = $dB->prepare('select count(sighting.id) as total from sighting, species, seawatch where species.species = :species  and sighting.species = species.id and sighting.seawatch = seawatch.id and seawatch.station = :station');
-            $query->bindParam(':pecies', $species, PDO::PARAM_STR);
-            $query->bindParam(':station', $id, PDO::PARAM_INT);
-        } else {
-            // or just get the total for all sightings
-            $query = $dB->prepare('select count(sighting.id) as total from sighting, seawatch where sighting.seawatch = seawatch.id and seawatch.station = :station');
-            $query->bindParam(':station', $id, PDO::PARAM_INT);
-        }
+        $stationQuery = $dB->prepare('select sighting.id from sighting where sighting.station = :station');
+        $stationQuery->bindParam(':station', $stationId, PDO::PARAM_INT);
+        $stationQuery->execute();
 
-        $query->execute();
 
-        $rowCount = $query->rowCount();
+        $station = array();
+        $station['id'] = $row['id'];
+        $station['name'] = $row['name'];
+        $station['latitude'] = $row['latitude'];
+        $station['longitude'] = $row['longitude'];
+        $station['total'] = $stationQuery->rowCount();
 
-        if ($rowCount === 0) {
-            $response = new Response();
-            $response->setHttpStatusCode(404);
-            $response->setSuccess(false);
-            $response->addMessage("No totals found");
-            $response->send();
-            exit;
-        }
-
-        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-            $total = array();
-            $total['station'] = $station;
-            $total['latitude'] = $latitude;
-            $total['longitude'] = $longitude;
-            $total['total'] = $$row['total'];
-            $stations[] = $total;
-        }
+        $stations[] = $station;
     }
+    $response = new Response();
+    $response->setHttpStatusCode(200);
+    $response->setSuccess(True);
+    $response->addMessage("SeaWatch submitted successfully");
+    $response->setdata($stations);
+    $response->send();
+    exit;
 } else {
 
     $response = new Response();

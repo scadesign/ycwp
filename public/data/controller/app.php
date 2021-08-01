@@ -47,7 +47,9 @@ if (array_key_exists("task", $_GET)) {
                 $rowCount = $query->rowCount();
 
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                    $wind = array($row['id'], $row['abbreviation']);
+                    $wind = array();
+                    $wind['id'] = $row['id'];
+                    $wind['task'] = $row['abbreviation'];
                     $taskArray[] = $wind;
                 }
             } catch (Exception $e) {
@@ -75,7 +77,9 @@ if (array_key_exists("task", $_GET)) {
                 $rowCount = $query->rowCount();
 
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                    $visibility = array($row['id'], $row['distance']);
+                    $visibility = array();
+                    $visibility['id'] = $row['id'];
+                    $visibility['task'] = $row['distance'];
                     $taskArray[] = $visibility;
                 }
             } catch (Exception $e) {
@@ -96,14 +100,16 @@ if (array_key_exists("task", $_GET)) {
             }
         } else if ($task == 'swell-height') {
             try {
-                $query = $dB->prepare('select id, type, height from swell_height');
+                $query = $dB->prepare('select id, height from swell_height');
 
                 $query->execute();
 
                 $rowCount = $query->rowCount();
 
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                    $swell = array($row['id'], $row['type'], $row['height']);
+                    $swell = array();
+                    $swell['id'] = $row['id'];
+                    $swell['task'] = $row['height'];
                     $taskArray[] = $swell;
                 }
             } catch (Exception $e) {
@@ -131,7 +137,9 @@ if (array_key_exists("task", $_GET)) {
                 $rowCount = $query->rowCount();
 
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                    $station = array($row['id'], $row['name']);
+                    $station = array();
+                    $station['id'] = $row['id'];
+                    $station['task'] = $row['name'];
                     $taskArray[] = $station;
                 }
             } catch (Exception $e) {
@@ -159,7 +167,9 @@ if (array_key_exists("task", $_GET)) {
                 $rowCount = $query->rowCount();
 
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                    $species = array($row['id'], $row['species']);
+                    $species = array();
+                    $species['id'] = $row['id'];
+                    $species['task'] = $row['species'];
                     $taskArray[] = $species;
                 }
             } catch (Exception $e) {
@@ -180,14 +190,16 @@ if (array_key_exists("task", $_GET)) {
             }
         } else if ($task == 'sea-state') {
             try {
-                $query = $dB->prepare('select id, state, description from sea_state');
+                $query = $dB->prepare('select id, state from sea_state');
 
                 $query->execute();
 
                 $rowCount = $query->rowCount();
 
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                    $seaState = array($row['id'], $row['state'], $row['description']);
+                    $seaState = array();
+                    $seaState['id'] = $row['id'];
+                    $seaState['task'] = $row['state'];
                     $taskArray[] = $seaState;
                 }
             } catch (Exception $e) {
@@ -215,7 +227,9 @@ if (array_key_exists("task", $_GET)) {
                 $rowCount = $query->rowCount();
 
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                    $confidence = array($row['id'], $row['name']);
+                    $confidence = array();
+                    $confidence['id'] = $row['id'];
+                    $confidence['task'] = $row['name'];
                     $taskArray[] = $confidence;
                 }
             } catch (Exception $e) {
@@ -243,7 +257,9 @@ if (array_key_exists("task", $_GET)) {
                 $rowCount = $query->rowCount();
 
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                    $behaviour = array($row['id'], $row['behaiour']);
+                    $behaviour = array();
+                    $behaviour['id'] = $row['id'];
+                    $behaviour['task'] = $row['behaviour'];
                     $taskArray[] = $behaviour;
                 }
             } catch (Exception $e) {

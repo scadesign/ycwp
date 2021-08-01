@@ -1,0 +1,27 @@
+@import "../../sass/mixins";
+@import "../../sass//variables";
+
+.header {
+  max-width: 125rem;
+  width: 85%;
+  margin: 0 auto 1rem auto;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-content: center;
+
+  @include respond(phone) {
+    display: block;
+    text-align: center;
+    border-bottom: 1px solid $dark-orange;
+    padding-bottom: 2rem;
+  }
+
+  &_logo {
+    width: 5rem;
+  }
+
+  & h2 {
+    align-self: center;
+  }
+}

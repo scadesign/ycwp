@@ -1,0 +1,55 @@
+@import "../../sass/variables";
+@import "../../sass/mixins";
+.navigation {
+  background: $dark-orange;
+  z-index: 3000;
+
+  & ul {
+    max-width: 125rem;
+    display: grid;
+    grid-template-columns: repeat(4, 15rem);
+    margin: 0 auto;
+    z-index: 3200;
+
+    @include respond(phone) {
+      grid-template-columns: repeat(4, 25%);
+      font-size: 1.5rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-top: 1px solid $dark-blue;
+    }
+
+    & a {
+      padding: 1rem;
+      color: $white;
+      text-decoration: none;
+      width: 100%;
+      text-align: center;
+      border-right: 1px solid $white;
+
+      &:first-child {
+        border-left: 1px solid $white;
+      }
+
+      &:hover {
+        background: $red;
+      }
+
+      @include respond(phone) {
+        padding: 1rem 0.6rem;
+        &:not(:last-child) {
+          border-right: 1px solid $white;
+        }
+        &:first-child {
+          border-left: none;
+        }
+      }
+
+      & li {
+        list-style: none;
+      }
+    }
+  }
+}

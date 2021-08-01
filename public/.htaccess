@@ -10,8 +10,9 @@ RewriteRule      ^tasks/([A-Za-z0-9_-]+)/?$          data/controller/app.php?tas
 RewriteRule      ^totals/([A-Za-z0-9_-]+)/?$          data/controller/seawatch.php?filter=$1        [L]
 RewriteRule      ^totals$                             data/controller/seawatch.php        [L]
 
-RewriteRule      ^users$                             data/controller/users.php                 [L]
+RewriteRule      ^users$                             data/controller/volunteer.php                 [L]
 
 RewriteRule      ^sessions/([0-9]+)$                 data/controller/session.php?sessionid=$1  [L]
 RewriteRule      ^sessions$                          data/controller/session.php               [L]
 
+RewriteRule      ^([A-Za-z0-9_-]+)/?$          index.html       [L]

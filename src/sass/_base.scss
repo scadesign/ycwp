@@ -1,0 +1,82 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  // 1 rem
+  font-size: 62.5%; // 1rem = 10px
+  background-color: $dark-blue;
+  min-height: 100vh;
+
+  @include respond(big-desktop) {
+    font-size: 75%; // 1rem = 12px, 9/16 = 75%
+  }
+}
+
+body {
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1.6rem;
+  padding: 0;
+}
+
+.container {
+  margin-top: 1.5rem;
+}
+
+.page {
+  display: block;
+  max-width: 125rem;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 0 0 0.1rem 0;
+
+  @include respond(tab-land) {
+    width: 85%;
+  }
+}
+
+.two-up {
+  display: grid;
+  grid-template-columns: repeat(2, 23.5%);
+  gap: 2%;
+
+  @include respond(phone) {
+    grid-template-columns: repeat(2, 48%);
+    gap: 4%;
+  }
+}
+
+.four-up {
+  display: grid;
+  grid-template-columns: repeat(4, 23.5%);
+  gap: 2%;
+
+  @include respond(phone) {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.three-up {
+  display: grid;
+  grid-template-columns: repeat(3, 32%);
+  gap: 2%;
+
+  @include respond(phone) {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
