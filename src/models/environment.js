@@ -82,7 +82,7 @@ export default class Environment {
     // Loop over the 31 days of October for the current year
     for (var i = 31; i > 0; i--) {
       var october = new Date(d.getFullYear(), 9, i);
-      if (october.getDay() == 0) {
+      if (october.getDay() === 0) {
         // last Sunday of October
         end = october;
         break;

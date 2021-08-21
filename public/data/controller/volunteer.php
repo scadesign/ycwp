@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once('db.php');
 require_once('../model/Response.php');
 
@@ -11,10 +11,10 @@ Response sent to client using the response model and json data listing errors or
 */
 
 // database connection
-try{
+try {
     $dB = DB::connectDB();
-} catch(PDOException $e) {
-    error_log("Connection error - ".$e, 0);
+} catch (PDOException $e) {
+    error_log("Connection error - " . $e, 0);
     $response = new Response();
     $response->setHttpStatusCode(500);
     $response->setSuccess(false);
@@ -24,7 +24,7 @@ try{
 }
 
 // sign up a volunteer with post content
-if($_SERVER['REQUEST_METHOD'] !=='POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response = new Response();
     $response->setHttpStatusCode(405);
     $response->setSuccess(false);
@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD'] !=='POST') {
     exit;
 }
 // check content header is set to json
-if($_SERVER['CONTENT_TYPE'] !== 'application/json') {
+if ($_SERVER['CONTENT_TYPE'] !== 'application/json') {
     $response = new Response();
     $response->setHttpStatusCode(400);
     $response->setSuccess(false);
@@ -44,7 +44,7 @@ if($_SERVER['CONTENT_TYPE'] !== 'application/json') {
 //assign the content
 $rowPostData = file_get_contents('php://input');
 // check content is valid json
-if(!$jsonData = json_decode($rowPostData)) {
+if (!$jsonData = json_decode($rowPostData)) {
     $response = new Response();
     $response->setHttpStatusCode(400);
     $response->setSuccess(false);
@@ -53,7 +53,7 @@ if(!$jsonData = json_decode($rowPostData)) {
     exit;
 }
 // some information is not supplied
-if(!isset($jsonData->first_name) || !isset($jsonData->last_name) || !isset($jsonData->email) || !isset($jsonData->phone) || !isset($jsonData->password)) {
+if (!isset($jsonData->first_name) || !isset($jsonData->last_name) || !isset($jsonData->email) || !isset($jsonData->phone) || !isset($jsonData->password)) {
     $response = new Response();
     $response->setHttpStatusCode(400);
     $response->setSuccess(false);
@@ -67,7 +67,7 @@ if(!isset($jsonData->first_name) || !isset($jsonData->last_name) || !isset($json
 }
 
 // validate the data is not blank and does notexceed the character limit
-if(strlen($jsonData->first_name) < 1 || strlen($jsonData->first_name) > 40 ||  strlen($jsonData->last_name) < 1 || strlen($jsonData->last_name) > 40 || !filter_var($jsonData->email, FILTER_VALIDATE_EMAIL) || strlen($jsonData->phone) < 1 || strlen($jsonData->phone) > 16 || strlen($jsonData->password) < 1 || strlen($jsonData->password) > 255) {
+if (strlen($jsonData->first_name) < 1 || strlen($jsonData->first_name) > 40 ||  strlen($jsonData->last_name) < 1 || strlen($jsonData->last_name) > 40 || !filter_var($jsonData->email, FILTER_VALIDATE_EMAIL) || strlen($jsonData->phone) < 1 || strlen($jsonData->phone) > 16 || strlen($jsonData->password) < 1 || strlen($jsonData->password) > 255) {
     $response = new Response();
     $response->setHttpStatusCode(400);
     $response->setSuccess(false);
@@ -75,7 +75,7 @@ if(strlen($jsonData->first_name) < 1 || strlen($jsonData->first_name) > 40 ||  s
     (strlen($jsonData->first_name) > 255 ? $response->addMessage("First name cannot be greater than 40 characters") : false);
     (strlen($jsonData->last_name) < 1 ? $response->addMessage("Last name cannot be blank") : false);
     (strlen($jsonData->last_name) > 255 ? $response->addMessage("Last name cannot be greater than 40 characters") : false);
-    (!filter_var($jsonData->email, FILTER_VALIDATE_EMAIL)?$response->addMessage("The email is not a valid email") : false);
+    (!filter_var($jsonData->email, FILTER_VALIDATE_EMAIL) ? $response->addMessage("The email is not a valid email") : false);
     (strlen($jsonData->phone) < 1 ? $response->addMessage("Phone cannot be blank") : false);
     (strlen($jsonData->phone) > 255 ? $response->addMessage("Phone cannot be greater than 16 digits") : false);
     (strlen($jsonData->password) < 1 ? $response->addMessage("Password cannot be blank") : false);
@@ -96,13 +96,13 @@ $password = $jsonData->password;
 try {
 
     //Check the volunteer doesn't already exist
-    $query = $dB->prepare('select id from tblusers where email = :email');
-    $query->bindParam(':username', $email, PDO::PARAM_STR);
+    $query = $dB->prepare('select id from volunteer where email = :email');
+    $query->bindParam(':email', $email, PDO::PARAM_STR);
     $query->execute();
 
     $rowCount = $query->rowCount();
 
-    if($rowCount !== 0) {
+    if ($rowCount !== 0) {
         $response = new Response();
         $response->setHttpStatusCode(409); //conflict error
         $response->setSuccess(false);
@@ -113,7 +113,7 @@ try {
     // secure thepassword to stroe in the database
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     // add the volunteer
-    $query = $dB->prepare('insert into tblusers (first_name, last_name, email, phone, password) values(:first_name, :last_name, :email, :phone , :password)');
+    $query = $dB->prepare('insert into volunteer (first_name, last_name, email, phone, password) values(:first_name, :last_name, :email, :phone , :password)');
     $query->bindParam(':first_name', $first_name, PDO::PARAM_STR);
     $query->bindParam(':last_name', $last_name, PDO::PARAM_STR);
     $query->bindParam(':email', $email, PDO::PARAM_STR);
@@ -123,9 +123,9 @@ try {
 
     $rowCount = $query->rowCount();
     // if there was a problem
-    if($rowCount === 0) {
+    if ($rowCount === 0) {
         $response = new Response();
-        $response->setHttpStatusCode(500); 
+        $response->setHttpStatusCode(500);
         $response->setSuccess(false);
         $response->addMessage("There was an issue creating a user account - please try again");
         $response->send();
@@ -140,16 +140,16 @@ try {
     $returnData['email'] = $email;
 
     $response = new Response();
-    $response->setHttpStatusCode(201); 
+    $response->setHttpStatusCode(201);
     $response->setSuccess(true);
     $response->addMessage("User created");
     $response->setData($returnData);
     $response->send();
     exit;
 
-// general database error
-}catch(PDOException $e){
-    error_log("Database query error - ".$e, 0);
+    // general database error
+} catch (PDOException $e) {
+    error_log("Database query error - " . $e, 0);
     $response = new Response();
     $response->setHttpStatusCode(500);
     $response->setSuccess(false);
@@ -157,5 +157,3 @@ try {
     $response->send();
     exit;
 }
-
-?>

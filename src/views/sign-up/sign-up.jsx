@@ -4,6 +4,9 @@ import Input from '../../components/input/input.component';
 import Button from '../../components/button/button.component';
 import LargeHeader from "../../components/large-header/large-header.component"
 import "./sign-up.styles.scss"
+import axios from "axios"
+
+
 
 
 class SignUp extends React.Component {
@@ -11,67 +14,80 @@ class SignUp extends React.Component {
     super(props);
 
     this.state = {
-     
+     first_name: '',
+     last_name: '',
+     email: '',
+     phone: '',
+     password: '',
+     status: false,
+     messages: []
     };
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    //this.setState({ email: "", password: "" });
+    const headers = {
+      'Content-Type': 'application/json'
+    }
+    // send post
+    axios.post("http://ycwp.test/users", this.state, {headers: headers})
+    .then((response) => {  
+      this.setState({status: true});   
+    }).catch((error) => {
+      this.setState({messages: error.response.data.messages});
+    })
   };
 
   handleChange = (event) => {
     const { value, name } = event.target;
-
     this.setState({ [name]: value });
-    console.log(this.state);
   };
 
   render() {
+    const { first_name, last_name, phone, email, password, status, messages} = this.state
     return (
       <div>
         <LargeHeader />
+        {!status ? 
         <div className="sign-in">
           <h2 className="title centre">Sign In</h2>
           <form onSubmit={this.handleSubmit}>
             <div className="sign-in-inputs">
-             
-               
-              
+                 
               <Input
-                name="firstname"
+                name="first_name"
                 type="text"
-                value={this.state.firstname}
+                value={first_name}
                 handleChange={this.handleChange}
                 required
-                label="firstname"
+                label="first_name"
                 title="Firstname"
               />
               
               <Input
-                name="lastname"
+                name="last_name"
                 type="text"
-                value={this.state.lastname}
+                value={last_name}
                 handleChange={this.handleChange}
                 required
-                label="lastname"
+                label="last_name"
                 title="Lastname"
               />
 
                <Input
-                name="Phone"
+                name="phone"
                 type="text"
-                value={this.state.phone}
+                value={phone}
                 handleChange={this.handleChange}
                 required
                 label="phone"
-                title="phone"
+                title="Phone"
               />
 
                <Input
                 name="email"
                 type="email"
-                value={this.state.email}
+                value={email}
                 handleChange={this.handleChange}
                 required
                 label="email"
@@ -81,7 +97,7 @@ class SignUp extends React.Component {
               <Input
                 name="password"
                 type="password"
-                value={this.state.password}
+                value={password}
                 handleChange={this.handleChange}
                 required
                 label="password"
@@ -92,6 +108,7 @@ class SignUp extends React.Component {
               
             </div>
             <div className="button-container">
+              {messages !=="" ? <div className="message">{ messages }</div>  : <div></div>}
             <Button type="submit" value="submit">
                 Sign In
               </Button>             
@@ -103,6 +120,14 @@ class SignUp extends React.Component {
             </Link>             
             </div>
         </div>
+        :  
+        <div>
+          <h4 className="title centre">Welcome {first_name}</h4>
+            <Link to ="/" className="cancel">
+                Continue
+            </Link>             
+            </div>
+      }
       </div>
       
     );

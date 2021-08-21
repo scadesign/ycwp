@@ -14,6 +14,8 @@ import { Results } from "./views/results/results";
 import  SignIn  from "./views/sign-in/sign-in";
 import SignUp from "./views/sign-up/sign-up";
 
+import './models/environment';
+
 
 function _ScrollToTop(props) {
   const { pathname } = useLocation();
@@ -27,6 +29,7 @@ function _ScrollToTop(props) {
 const ScrollToTop = withRouter(_ScrollToTop);
 
 class App extends Component {
+  environment = new Environment();
   render() {
     return (
       <main className="container">
