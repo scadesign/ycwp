@@ -33,6 +33,7 @@ class SignUp extends React.Component {
     axios.post("http://ycwp.test/users", this.state, {headers: headers})
     .then((response) => {  
       this.setState({status: true});   
+      console.log(this.state.status);
     }).catch((error) => {
       this.setState({messages: error.response.data.messages});
     })
@@ -50,7 +51,7 @@ class SignUp extends React.Component {
         <LargeHeader />
         {!status ? 
         <div className="sign-in">
-          <h2 className="title centre">Sign In</h2>
+          <h2 className="title centre">Sign Up</h2>
           <form onSubmit={this.handleSubmit}>
             <div className="sign-in-inputs">
                  
@@ -110,7 +111,7 @@ class SignUp extends React.Component {
             <div className="button-container">
               {messages !=="" ? <div className="message">{ messages }</div>  : <div></div>}
             <Button type="submit" value="submit">
-                Sign In
+                Sign Up
               </Button>             
             </div>
           </form>
@@ -123,10 +124,10 @@ class SignUp extends React.Component {
         :  
         <div>
           <h4 className="title centre">Welcome {first_name}</h4>
-            <Link to ="/" className="cancel">
-                Continue
-            </Link>             
-            </div>
+          <Link to ="/" className="cancel">
+              Continue
+          </Link>             
+        </div>
       }
       </div>
       

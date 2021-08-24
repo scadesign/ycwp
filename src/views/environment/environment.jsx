@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import Select from '../../components/select/select.component';
 import Input from '../../components/input/input.component';
 import Button from '../../components/button/button.component';
@@ -7,13 +8,30 @@ import MenuItem from '../../components/menu/menu.component';
 import Header from "../../components/header/header.component"
 import './environment.styles.scss';
 
-class Environment extends React.Component {
+import '../../models/environment';
+import Environment from "../../models/environment";
+
+class EnvironmentView extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-     
+     start: '',
+     end: '',
+     seastate: '',
+     swellheight: '',
+     winddirection: '',
+     visibility: '',
+     notes: '',
+    status: false,
+    messages:''
     };
+  }
+  readStorage() {
+    const active = JSON.parse(localStorage.getItem('seawatch'));
+    if (active) {
+      this.setState.status = true; 
+    }
   }
 
   handleSubmit = (event) => {
@@ -27,8 +45,13 @@ class Environment extends React.Component {
     this.setState({ [name]: value });
     console.log(this.state);
   };
-
+  environment = new Environment();
   render() {
+    this.readStorage();
+    const { start, end, seastate, swellheight, winddirection, visibility, notes, status} = this.state;
+    if(status) {
+      return <Redirect to='/sign-in' />
+    }
     return (
       <div>
         <Header />
@@ -43,13 +66,13 @@ class Environment extends React.Component {
                 <Input
               name="start"
               type="hidden"
-              value={this.state.start}
+              value={start}
               />
               
               <Input
                 name="start-time"
                 type="time"
-                value={this.state.start}
+                value={start}
                 handleChange={this.handleChange}
                 required
                 label="Start-time"
@@ -61,13 +84,13 @@ class Environment extends React.Component {
                 <Input
                 name="end"
                 type="hidden"
-                value={this.state.end}
+                value={end}
               />
               
               <Input
                 name="end-time"
                 type="time"
-                value={this.state.end}
+                value={end}
                 handleChange={this.handleChange}
                 required
                 label="end-time"
@@ -80,40 +103,40 @@ class Environment extends React.Component {
             <div className="four-up">
 
             <Select
-              name="sea-state"
-              task="sea-state"
-              value={this.state.sea}
+              name="seastate"
+              task="seastate"
+              value={seastate}
               handleChange={this.handleChange}
               required
-              label="sea-state"
+              label="seastate"
               title="Sea state"
             />
 
             <Select
-              name="swell-height"
-              task="swell-height"
-              value={this.state.swell}
+              name="swellheight"
+              task="swellheight"
+              value={swellheight}
               handleChange={this.handleChange}
               required
-              label="swell-height"
+              label="swellheight"
               title="Swell Height"
             />
             
 
             <Select
-              name="wind-direction"
-              task="wind-direction"
-              value={this.state.direction}
+              name="winddirection"
+              task="winddirection"
+              value={winddirection}
               handleChange={this.handleChange}
               required
-              label="wind-direction"
+              label="winddirection"
               title="Wind Direction"
             />
 
             <Select
               name="Visibility"
               task="visibility"
-              value={this.state.visibility}
+              value={visibility}
               handleChange={this.handleChange}
               required
               label="visibility"
@@ -121,10 +144,10 @@ class Environment extends React.Component {
             />
             </div>
             <div>
-              <TextArea  name="additional-notes"
-                value={this.state.end}
+              <TextArea  name="notes"
+                value={notes}
                 handleChange={this.handleChange}
-                label="additional-notes"
+                label="notes"
                 title="Additional Notes e.g. boat activity"
                 rows="4" cols="65"
                 />
@@ -145,4 +168,4 @@ class Environment extends React.Component {
 
 }
 
-export default Environment;
+export default EnvironmentView;

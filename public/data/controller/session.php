@@ -300,11 +300,9 @@ if (array_key_exists("sessionid", $_GET)) {
 
         $dB->commit();
         $returndata = array();
-        $returnData['sessiion_id'] = intval($lastSessionID);
+        $returnData['session_id'] = intval($lastSessionID);
         $returnData['access_token'] = $accesstoken;
-        $returnData['access_token_expires_in'] = $access_token_expiry_seconds;
-        $returnData['refresh_token'] = $refreshtoken;
-        $returnData['refresh_token_expires_in'] = $refresh_token_expiry_seconds;
+
         // login the user and set confirmation response
         $response = new Response();
         $response->setHttpStatusCode(201);
