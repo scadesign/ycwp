@@ -236,7 +236,7 @@ if (array_key_exists("sessionid", $_GET)) {
         $email = $jsonData->email;
         $password = $jsonData->password;
         // select the volunteer
-        $query = $dB->prepare('select id, email, password from volunteer where email = :email');
+        $query = $dB->prepare('select id, email, password, first_name from volunteer where email = :email');
         $query->bindParam(':email', $email, PDO::PARAM_STR);
         $query->execute();
 
@@ -256,6 +256,7 @@ if (array_key_exists("sessionid", $_GET)) {
         $returned_id = $row['id'];
         $returned_username = $row['email'];
         $returned_password = $row['password'];
+        $returned_name = $row['first_name'];
 
 
         // check the provided password matches the volunteers password
@@ -302,6 +303,7 @@ if (array_key_exists("sessionid", $_GET)) {
         $returndata = array();
         $returnData['session_id'] = intval($lastSessionID);
         $returnData['access_token'] = $accesstoken;
+        $returnData['first_name'] = $returned_name;
 
         // login the user and set confirmation response
         $response = new Response();

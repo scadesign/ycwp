@@ -7,7 +7,6 @@ export default class Environment {
   addItem(start, end, seaState, swellHeight, windDirection, visibility, notes) {
     const item = {
       id: this.numItems,
-      zone: this.isBST(),
       start,
       end,
       seaState,
@@ -96,4 +95,37 @@ export default class Environment {
     }
     return isBST;
   }
+
+  incrementEnd(time) {
+  const splitTime = time.split(":");
+  const  startHour = parseInt(splitTime[0]);
+  const startMin = parseInt(splitTime[1]);
+  let min = startMin;
+  let hour = startHour;
+
+  if(startMin > 44){
+    min = 15-(60-startMin);
+    hour = this.checkHour(startHour);
+    
+  } else {
+    min = startMin+15;
+    hour = startHour;
+  }
+  
+  if(hour<10){
+    hour = `0${hour}`;
+  }
+  if(min<10){
+    min = `0${min}`;
+  }
+  return `${hour}:${min}`;
+};
+
+checkHour(hour) {
+  if(hour ===23){
+    return 0;
+  } else {
+    return hour+1;
+  }
+};
 }

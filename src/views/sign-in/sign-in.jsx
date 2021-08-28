@@ -7,12 +7,12 @@ import Button from '../../components/button/button.component';
 import LargeHeader from "../../components/large-header/large-header.component"
 import "./sign-in.styles.scss"
 import axios from "axios"
+import Seawatch from '../../models/seawatch';
 
 
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       email: '',
       password: '',
@@ -22,14 +22,6 @@ class SignIn extends React.Component {
     };
   }
 
-  readStorage() {
-    const active = JSON.parse(localStorage.getItem('seawatch'));
-    if (active) {
-      this.state.status = true; 
-    }
-  }
-
-
   handleSubmit = (event) => {
     event.preventDefault();
 
@@ -38,19 +30,23 @@ class SignIn extends React.Component {
     }
     const signUp = {
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
+      first_name: ''
     }
     axios.post("http://ycwp.test/sessions", signUp, {headers: headers})
     .then((response) => {  
-      this.setState({status: true}); 
+      this.setState({status: true});
+      this.setState({first_name: response.data.data.first_name})
       
-      const seawatch = {
-        session_id: response.data.data.session_id,
-        access_token: response.data.data.access_token,
-        station: this.state.station,
-        date: this.state.date
-      }
-      localStorage.setItem('seawatch', JSON.stringify(seawatch));
+      this.props.seawatch.addRecord(
+        response.data.data.session_id, 
+        response.data.data.access_token, 
+        this.state.station, 
+        this.state.date, 
+        response.data.data.first_name
+        )
+      this.state.status = true;
+      this.props.seawatch.readStorage();
       
     }).catch((error) => {
       this.setState({messages: error.response.data.messages});
@@ -63,10 +59,15 @@ class SignIn extends React.Component {
   };
   
   render() {
-    this.readStorage();
-    
-    const { email, password, status, messages} = this.state;
-    if(status) {
+    console.log(this.props.seawatch)
+    const { email, password, messages} = this.state;
+    if(this.state.status) {
+      return <div>
+        <LargeHeader />
+          <h2 className="title centre">Welcome Back {this.state.first_name}</h2>
+        <Link to='/add-environment' className="cancel">Continue</Link>
+        </div>
+    }else if(this.props.seawatch.hasRecord) {
       return <Redirect to='/add-environment' />
     }
     return (

@@ -1,4 +1,5 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import Select from '../../components/select/select.component';
 import Input from '../../components/input/input.component';
 import Button from '../../components/button/button.component';
@@ -6,18 +7,58 @@ import TextArea from '../../components/textarea/textarea.component';
 import MenuItem from '../../components/menu/menu.component';
 import Header from "../../components/header/header.component"
 
-class Sighting extends React.Component {
+class SightingView extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-     
+      start: '',
+      end: '',
+      species: '',
+      confidence: '',
+      groupsize: '',
+      calves: '',
+      juveniles: '',
+      bearing: '',
+      distance: '',
+      behaviour: '',
+      birds: '',
+      messages: ''
     };
+  }
+
+  emptyState() {
+    this.state = {
+      start: '',
+      end: '',
+      species: '',
+      confidence: '',
+      groupsize: '',
+      calves: '',
+      juveniles: '',
+      bearing: '',
+      distance: '',
+      behaviour: '',
+      birds: '',
+      messages: ''
+    }
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    //this.setState({ email: "", password: "" });
+    this.props.sighting.addItem(
+      this.state.start, this.state.end, 
+      this.state.species, 
+      this.state.confidence, 
+      this.state.groupsize,  
+      this.state.calves, 
+      this.state.juveniles,
+      this.state.bearing,
+      this.state.distance,
+      this.state.behaviour,
+      this.state.birds,
+      );
+      this.emptyState();
   };
 
   handleChange = (event) => {
@@ -27,49 +68,44 @@ class Sighting extends React.Component {
   };
 
   render() {
+    const { start, end, species, confidence, groupsize, calves, juveniles, bearing, distance, behaviour, birds} = this.state;
+    if(!this.props.seawatch.hasRecord){
+      return <Redirect to="/sign-in" />
+    }
     return (
       <div>
         <Header />
         <MenuItem />
         <div className="sighting page">
           <h2 className="title">Add Sighting data</h2>
-          <p>Make a new record every 15mins, when environmental conditions change or when there is a break in effort</p>
 
           <form onSubmit={this.handleSubmit}>
            
             <div className="four-up">
                <div>
-                <Input
-              name="start"
-              type="hidden"
-              value={this.state.start}
-              />
+                
               
               <Input
-                name="start-time"
+                name="start"
                 type="time"
-                value={this.state.start}
+                value={start}
                 handleChange={this.handleChange}
                 required
-                label="Start-time"
+                label="Start"
                 title="Start time"
               />
               </div>
               
               <div>
-                <Input
-                name="end"
-                type="hidden"
-                value={this.state.end}
-              />
+               
               
               <Input
-                name="end-time"
+                name="end"
                 type="time"
-                value={this.state.end}
+                value={end}
                 handleChange={this.handleChange}
                 required
-                label="end-time"
+                label="end"
                 title="End Time"
               />
               </div>
@@ -77,7 +113,7 @@ class Sighting extends React.Component {
             <Select
               name="species"
               task="species"
-              value={this.state.species}
+              value={species}
               handleChange={this.handleChange}
               required
               label="species"
@@ -87,7 +123,7 @@ class Sighting extends React.Component {
             <Select
               name="confidence"
               task="confidence"
-              value={this.state.confidence}
+              value={confidence}
               handleChange={this.handleChange}
               required
               label="confidence"
@@ -99,12 +135,12 @@ class Sighting extends React.Component {
                
                   
                   <Input
-                    name="group_size"
+                    name="groupsize"
                     type="text"
-                    value={this.state.start}
+                    value={groupsize}
                     handleChange={this.handleChange}
                     required
-                    label="group_size"
+                    label="groupsize"
                     title="Group Size (min-max)"
                   />
                  
@@ -113,7 +149,7 @@ class Sighting extends React.Component {
                   <Input
                     name="calves"
                     type="number"
-                    value={this.state.calves}
+                    value={calves}
                     handleChange={this.handleChange}
                     required
                     label="calves"
@@ -123,7 +159,7 @@ class Sighting extends React.Component {
                    <Input
                     name="juveniles"
                     type="number"
-                    value={this.state.juveniles}
+                    value={juveniles}
                     handleChange={this.handleChange}
                     required
                     label="juveniles"
@@ -136,8 +172,8 @@ class Sighting extends React.Component {
                   
                 <Select
                   name="bearing"
-                  task="wind-direction"
-                  value={this.state.direction}
+                  task="winddirection"
+                  value={bearing}
                   handleChange={this.handleChange}
                   required
                   label="bearing"
@@ -147,7 +183,7 @@ class Sighting extends React.Component {
                 <Input
                   name="distance"
                   type="number"
-                  value={this.state.distance}
+                  value={distance}
                   handleChange={this.handleChange}
                   required
                   label="distannce"
@@ -157,7 +193,7 @@ class Sighting extends React.Component {
                 <Select
                   name="behaviour"
                   task="behaviour"
-                  value={this.state.behaviour}
+                  value={behaviour}
                   handleChange={this.handleChange}
                   required
                   label="behaviour"
@@ -167,10 +203,10 @@ class Sighting extends React.Component {
 
 
             <div>
-              <TextArea  name="associated_birds"
-                value={this.state.end}
+              <TextArea  name="birds"
+                value={birds}
                 handleChange={this.handleChange}
-                label="associated_birds"
+                label="birds"
                 title="Associated Birds"
                 rows="4" cols="65"
                 />
@@ -191,4 +227,4 @@ class Sighting extends React.Component {
 
 }
 
-export default Sighting;
+export default SightingView;

@@ -37,7 +37,7 @@ if (array_key_exists("task", $_GET)) {
     //check its a GET request as no other method is allowed
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // create the selection based on the task description
-        if ($task == 'wind-direction') {
+        if ($task == 'winddirection') {
 
             try {
                 $query = $dB->prepare('select id, abbreviation from wind_direction');
@@ -98,7 +98,7 @@ if (array_key_exists("task", $_GET)) {
                 $response->send();
                 exit;
             }
-        } else if ($task == 'swell-height') {
+        } else if ($task == 'swellheight') {
             try {
                 $query = $dB->prepare('select id, height from swell_height');
 
@@ -188,7 +188,7 @@ if (array_key_exists("task", $_GET)) {
                 $response->send();
                 exit;
             }
-        } else if ($task == 'sea-state') {
+        } else if ($task == 'seastate') {
             try {
                 $query = $dB->prepare('select id, state from sea_state');
 

@@ -9,7 +9,7 @@ import Header from "../../components/header/header.component"
 import './environment.styles.scss';
 
 import '../../models/environment';
-import Environment from "../../models/environment";
+
 
 class EnvironmentView extends React.Component {
   constructor(props) {
@@ -23,34 +23,43 @@ class EnvironmentView extends React.Component {
      winddirection: '',
      visibility: '',
      notes: '',
-    status: false,
-    messages:''
+     messages:''
     };
   }
-  readStorage() {
-    const active = JSON.parse(localStorage.getItem('seawatch'));
-    if (active) {
-      this.setState.status = true; 
-    }
-  }
 
+  emptyState = () => {
+    console.log(this.state);
+    this.state.start = this.state.end;
+    document.querySelector('#start').value = this.state.end;
+    this.state.end = '';
+    this.state.notes = '';
+    
+    document.querySelector('#end').value = '';
+    console.log(this.state);
+  }
+ 
   handleSubmit = (event) => {
     event.preventDefault();
-    //this.setState({ email: "", password: "" });
+    this.props.environment.addItem(
+      this.state.start, this.state.end, 
+      this.state.seastate, this.state.swellheight, 
+      this.state.winddirection,  this.state.visibility, 
+      this.state.notes);
+    this.emptyState();
   };
 
   handleChange = (event) => {
     const { value, name } = event.target;
-
     this.setState({ [name]: value });
-    console.log(this.state);
   };
-  environment = new Environment();
+
+  
+  
   render() {
-    this.readStorage();
-    const { start, end, seastate, swellheight, winddirection, visibility, notes, status} = this.state;
-    if(status) {
-      return <Redirect to='/sign-in' />
+    console.log(this.props.seawatch)
+    const { start,  end, seastate, swellheight, winddirection, visibility, notes} = this.state;
+    if(!this.props.seawatch.hasRecord){
+      return <Redirect to="/sign-in" />
     }
     return (
       <div>
@@ -63,38 +72,30 @@ class EnvironmentView extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <div className="time two-up">
               <div>
-                <Input
-              name="start"
-              type="hidden"
-              value={start}
-              />
               
               <Input
-                name="start-time"
+                name="start"
                 type="time"
                 value={start}
                 handleChange={this.handleChange}
                 required
-                label="Start-time"
+                label="start"
                 title="Start time"
+                id="start"
               />
               </div>
               
               <div>
-                <Input
-                name="end"
-                type="hidden"
-                value={end}
-              />
-              
+                
               <Input
-                name="end-time"
+                name="end"
                 type="time"
                 value={end}
                 handleChange={this.handleChange}
                 required
-                label="end-time"
+                label="end"
                 title="End Time"
+                id="end"
               />
               </div>
               
@@ -134,7 +135,7 @@ class EnvironmentView extends React.Component {
             />
 
             <Select
-              name="Visibility"
+              name="visibility"
               task="visibility"
               value={visibility}
               handleChange={this.handleChange}
