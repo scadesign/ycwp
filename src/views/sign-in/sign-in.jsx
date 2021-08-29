@@ -42,8 +42,8 @@ class SignIn extends React.Component {
         response.data.data.session_id, 
         response.data.data.access_token, 
         this.state.station, 
+        response.data.data.first_name,
         this.state.date, 
-        response.data.data.first_name
         )
       this.state.status = true;
       this.props.seawatch.readStorage();
@@ -59,7 +59,7 @@ class SignIn extends React.Component {
   };
   
   render() {
-    console.log(this.props.seawatch)
+    this.props.environment.updated = false;
     const { email, password, messages} = this.state;
     if(this.state.status) {
       return <div>

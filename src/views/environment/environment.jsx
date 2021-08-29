@@ -5,10 +5,10 @@ import Input from '../../components/input/input.component';
 import Button from '../../components/button/button.component';
 import TextArea from '../../components/textarea/textarea.component';
 import MenuItem from '../../components/menu/menu.component';
-import Header from "../../components/header/header.component"
+import Header from "../../components/header/header.component";
+import StatusIndicator from '../../components/statusIndicator/statusIndicator';
 import './environment.styles.scss';
 
-import '../../models/environment';
 
 
 class EnvironmentView extends React.Component {
@@ -27,15 +27,18 @@ class EnvironmentView extends React.Component {
     };
   }
 
-  emptyState = () => {
-    console.log(this.state);
-    this.state.start = this.state.end;
-    document.querySelector('#start').value = this.state.end;
-    this.state.end = '';
-    this.state.notes = '';
+
+  updateFields = () => {
+    this.props.environment.readStorage();
+    const newItem = this.props.environment.getLastItem();
+    this.state.start = newItem.start;
+    this.state.end = newItem.end;
+    this.state.seastate = newItem.seaState;
+    this.state.swellheight = newItem.swellHeight;
+    this.state.winddirection = newItem.windDirection;
+    this.state.visibility = newItem.visibility;
+    this.state.notes =  '';
     
-    document.querySelector('#end').value = '';
-    console.log(this.state);
   }
  
   handleSubmit = (event) => {
@@ -45,7 +48,8 @@ class EnvironmentView extends React.Component {
       this.state.seastate, this.state.swellheight, 
       this.state.winddirection,  this.state.visibility, 
       this.state.notes);
-    this.emptyState();
+    this.updateFields();
+    window.location.reload();
   };
 
   handleChange = (event) => {
@@ -56,7 +60,9 @@ class EnvironmentView extends React.Component {
   
   
   render() {
-    console.log(this.props.seawatch)
+    if(this.props.environment.numItems > 0  && this.props.environment.updated !== true){
+      this.updateFields();
+    }
     const { start,  end, seastate, swellheight, winddirection, visibility, notes} = this.state;
     if(!this.props.seawatch.hasRecord){
       return <Redirect to="/sign-in" />
@@ -64,11 +70,14 @@ class EnvironmentView extends React.Component {
     return (
       <div>
         <Header />
+        
         <MenuItem />
         <div className="environment page">
           <h2 className="title">Add Environment data</h2>
+          
           <p>Make a new record every 15mins, when environmental conditions change or when there is a break in effort</p>
-
+          <StatusIndicator className = 'status-indicator' numberItems={this.props.environment.numItems} />
+          {this.props.environment.updated === true ? <p className='highlight'>Details updated to estimated next environment data submission</p> : <p>please fill in the form to continue</p>}
           <form onSubmit={this.handleSubmit}>
             <div className="time two-up">
               <div>
@@ -111,6 +120,7 @@ class EnvironmentView extends React.Component {
               required
               label="seastate"
               title="Sea state"
+              id="seastate"
             />
 
             <Select
@@ -121,6 +131,7 @@ class EnvironmentView extends React.Component {
               required
               label="swellheight"
               title="Swell Height"
+              id="swellheight"
             />
             
 
@@ -132,6 +143,7 @@ class EnvironmentView extends React.Component {
               required
               label="winddirection"
               title="Wind Direction"
+              id="winddirection"
             />
 
             <Select
@@ -142,6 +154,7 @@ class EnvironmentView extends React.Component {
               required
               label="visibility"
               title="Visibility"
+              id="visibility"
             />
             </div>
             <div>
@@ -151,6 +164,7 @@ class EnvironmentView extends React.Component {
                 label="notes"
                 title="Additional Notes e.g. boat activity"
                 rows="4" cols="65"
+                id="notes"
                 />
               
             </div>

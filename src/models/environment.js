@@ -1,7 +1,8 @@
 export default class Environment {
   constructor() {
     this.items = [];
-    this.numItems = 1;
+    this.numItems = 0;
+    this.updated = false;
   };
 
   addItem(start, end, seaState, swellHeight, windDirection, visibility, notes) {
@@ -22,10 +23,12 @@ export default class Environment {
 
   };
 
-  getlastItem() {
+  getLastItem() {
     const last = this.items.length - 1;
     const newItem = this.items[last];
     newItem.start = newItem.end;
+    newItem.end = this.incrementEnd(newItem.end);
+    this.updated = true;
     return newItem;
   }
 
@@ -56,7 +59,7 @@ export default class Environment {
     const storage = JSON.parse(localStorage.getItem('environment'));
     if (storage) {
       this.items = storage;
-      this.numItems = storage.length + 1;
+      this.numItems = storage.length;
     }
   }
 

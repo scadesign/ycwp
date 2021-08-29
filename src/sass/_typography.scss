@@ -74,6 +74,45 @@ p {
     background-color: $light-orange;
   }
 }
+.highlight {
+  color: $light-orange;
+}
+
+.status-indicator {
+  display: block;
+  position: absolute;
+  top: 2rem;
+  right: 5rem;
+
+  @include respond(tab-land) {
+    top: 13rem;
+  }
+  @include respond(tab-port) {
+    top: 15rem;
+    right: 2rem;
+  }
+
+  @include respond(phone) {
+    position: relative;
+    margin: -1rem 0 1.5rem 0;
+    top: 0;
+    right: 0;
+  }
+}
+
+.sighting-indicator {
+  display: block;
+  position: absolute;
+  top: 2rem;
+  right: 5rem;
+
+  @include respond(phone) {
+    position: relative;
+    margin: -1rem 0 1.5rem 0;
+    top: 0;
+    right: 0;
+  }
+}
 
 .message {
   background: $light-orange;

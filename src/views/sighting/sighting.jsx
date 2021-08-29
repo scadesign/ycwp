@@ -5,7 +5,8 @@ import Input from '../../components/input/input.component';
 import Button from '../../components/button/button.component';
 import TextArea from '../../components/textarea/textarea.component';
 import MenuItem from '../../components/menu/menu.component';
-import Header from "../../components/header/header.component"
+import Header from "../../components/header/header.component";
+import StatusIndicator from '../../components/statusIndicator/statusIndicator';
 
 class SightingView extends React.Component {
   constructor(props) {
@@ -68,6 +69,7 @@ class SightingView extends React.Component {
   };
 
   render() {
+    this.props.environment.updated = false;
     const { start, end, species, confidence, groupsize, calves, juveniles, bearing, distance, behaviour, birds} = this.state;
     if(!this.props.seawatch.hasRecord){
       return <Redirect to="/sign-in" />
@@ -78,7 +80,8 @@ class SightingView extends React.Component {
         <MenuItem />
         <div className="sighting page">
           <h2 className="title">Add Sighting data</h2>
-
+          <p>Please fill in the details as completely as possible</p>
+          <StatusIndicator className='sighting-indicator' numberItems={this.props.sighting.numItems} />
           <form onSubmit={this.handleSubmit}>
            
             <div className="four-up">

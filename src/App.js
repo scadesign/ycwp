@@ -55,7 +55,9 @@ class App extends Component {
               <Route path="/" exact component={Home} />
               <Route path="/sign-up" exact component={SignUp} />
               <Route path="/sign-in" render={props => 
-                (<SignIn {...props} seawatch={this.state.seawatch}/>)
+                (<SignIn {...props} 
+                  seawatch={this.state.seawatch}
+                  environment={this.state.environment}/>)
               }/>
               <Route path="/add-environment" render={props => 
                 (<EnvironmentView {...props} 
@@ -65,7 +67,10 @@ class App extends Component {
               <Route path="/add-sighting" render={props => 
                 (<SightingView {...props} 
                   sighting={this.state.sighting}
-                  seawatch={this.state.seawatch}/>)
+                  seawatch={this.state.seawatch}
+                  environment={this.state.environment}/>
+                  )
+                  
               }/>
               <Route path="/view-sightings" exact component={Results} />
             </Switch>
