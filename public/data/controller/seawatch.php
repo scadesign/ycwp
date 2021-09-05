@@ -109,16 +109,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
         //insert the seawatch into the sewatch table
-        $newSeawatch = new SeaWatch(null, trim($jsonData->date), trim($jsonData->station), trim($returned_userid));
+        $newSeawatch = new SeaWatch(null, null, trim($jsonData->station), trim($returned_userid));
 
-        $date = $newSeawatch->getDate();
+        $date = trim($jsonData->date);
         $station = $newSeawatch->getStation();
         $volunteer = $newSeawatch->getVolunteer();
 
+        $stationquery = $dB->prepare('select station.id from  station where station.name = :name');
+        $stationquery->bindParam(':name', $station);
+        $stationquery->execute();
+        $row = $stationquery->fetch(PDO::FETCH_ASSOC);
+        $returned_station = $row['id'];
+
         $query = $dB->prepare('insert into seawatch (date, station, volunteer) values (STR_TO_DATE(:date, \'%d/%m/%Y %H:%i\'), :station, :volunteer)');
         $query->bindParam(':date', $date, PDO::PARAM_STR);
-        $query->bindParam(':station', $station, PDO::PARAM_STR);
-        $query->bindParam(':volunteer', $volunteer, PDO::PARAM_STR);
+        $query->bindParam(':station', $returned_station, PDO::PARAM_INT);
+        $query->bindParam(':volunteer', $volunteer, PDO::PARAM_INT);
         $query->execute();
 
         //check the insertion went ok and send message if not
@@ -147,9 +153,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $env = (array) $environment[$i];
                 $start = trim($env['start']);
                 $end = trim($env['end']);
-                $seaState = trim($env['seastate']);
-                $swellHeight = trim($env['swellheight']);
-                $windDirection = trim($env['winddirection']);
+                $seaState = trim($env['seaState']);
+                $swellHeight = trim($env['swellHeight']);
+                $windDirection = trim($env['windDirection']);
                 $visibility = trim($env['visibility']);
                 $notes = trim($env['notes']);
 
@@ -164,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // select the ids for the selections
                 $query = $dB->prepare('select sea_state.id as sea_state, swell_height.id as swell_height, wind_direction.id as wind_direction, visibility.id as visibility from sea_state, swell_height, wind_direction, visibility 
-                                    where sea_state.state = :seastate AND swell_height.type = :swellheight AND wind_direction.abbreviation = :winddirection AND visibility.distance = :visibility');
+                                    where sea_state.state = :seastate AND swell_height.height = :swellheight AND wind_direction.abbreviation = :winddirection AND visibility.distance = :visibility');
                 $query->bindParam(':seastate', $returnedSeaState, PDO::PARAM_STR);
                 $query->bindParam(':swellheight', $returnedSwellHeight, PDO::PARAM_STR);
                 $query->bindParam(':winddirection', $returnedWindDirection, PDO::PARAM_STR);
@@ -231,17 +237,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 try {
                     //get the data
                     $sighting = (array) $sightings[$i];
-                    $firstSeen = trim($sighting['firstseen']);
-                    $lastSeen = trim($sighting['lastseen']);
+                    $firstSeen = trim($sighting['firstSeen']);
+                    $lastSeen = trim($sighting['lastSeen']);
                     $species = trim($sighting['species']);
                     $confidence = trim($sighting['confidence']);
-                    $groupSize = trim($sighting['groupsize']);
+                    $groupSize = trim($sighting['groupSize']);
                     $calves = trim($sighting['calves']);
                     $juveniles = trim($sighting['juveniles']);
                     $bearing = trim($sighting['bearing']);
                     $distance = trim($sighting['distance']);
                     $behaviour = trim($sighting['behaviour']);
-                    $associatedBirds = trim($sighting['associatedbirds']);
+                    $associatedBirds = trim($sighting['associatedBirds']);
 
                     // create a new sighting object
                     $sightingModel = new Sighting(null, $firstSeen, $lastSeen, $species, $confidence, $groupSize, $calves, $juveniles, $bearing, $distance, $behaviour, $associatedBirds);
@@ -318,11 +324,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $response->send();
                         exit;
                     }
+                    //delete the session
+                    $query = $dB->prepare('delete from tblsessions where accesstoken = :accesstoken');
+                    $query->bindParam('accesstoken', $access_token, PDO::PARAM_STR);
+                    $query->execute();
                 } catch (PDOException $e) {
                     $response = new Response();
                     $response->setHttpStatusCode(500);
                     $response->setSuccess(false);
-                    $response->addMessage("There was an issue matching some sightings data" . $e);
+                    $response->addMessage("There was an issue matching some sightings data");
                     $response->send();
                     exit;
                 }
@@ -349,7 +359,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response = new Response();
         $response->setHttpStatusCode(500);
         $response->setSuccess(false);
-        $response->addMessage("Failed to create the sea watch - check submitted data for errors");
+        $response->addMessage($e);
         $response->send();
         exit;
     }

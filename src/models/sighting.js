@@ -2,7 +2,7 @@
 export default class Sighting {
   constructor() {
     this.items = [];
-    this.numItems = 1;
+    this.numItems = 0;
   };
 
   addItem (firstSeen, lastSeen, species, confidence, groupSize, calves, juveniles, bearing, distance, behaviour, associatedBirds){
@@ -56,7 +56,7 @@ export default class Sighting {
 
   clearItems(){
     this.items = [];
-    this.numItems = 1;
+    this.numItems = 0;
   }
 
   persistData() {
@@ -73,5 +73,6 @@ export default class Sighting {
   
   removeStorage() {
     localStorage.removeItem('sightings');
+    this.clearItems();
   }
 }

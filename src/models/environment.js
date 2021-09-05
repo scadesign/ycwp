@@ -63,8 +63,14 @@ export default class Environment {
     }
   }
 
+   clearItems(){
+    this.items = [];
+    this.numItems = 1;
+  }
+
   removeStorage() {
     localStorage.removeItem('environment');
+    this.clearItems()
   }
 
   isBST() {

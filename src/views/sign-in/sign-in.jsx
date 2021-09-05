@@ -7,18 +7,21 @@ import Button from '../../components/button/button.component';
 import LargeHeader from "../../components/large-header/large-header.component"
 import "./sign-in.styles.scss"
 import axios from "axios"
-import Seawatch from '../../models/seawatch';
+
 
 
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
+  
     this.state = {
       email: '',
       password: '',
       station: '',
       status: false,
       date: new Date().toLocaleDateString(),
+      hours: new Date().getHours(),
+      mins: new Date().getMinutes()
     };
   }
 
@@ -37,13 +40,16 @@ class SignIn extends React.Component {
     .then((response) => {  
       this.setState({status: true});
       this.setState({first_name: response.data.data.first_name})
+
+      const date = `${this.state.date} ${this.state.hours}:${this.state.mins}`;
+      console.log(date);
       
       this.props.seawatch.addRecord(
         response.data.data.session_id, 
         response.data.data.access_token, 
         this.state.station, 
         response.data.data.first_name,
-        this.state.date, 
+        date, 
         )
       this.state.status = true;
       this.props.seawatch.readStorage();

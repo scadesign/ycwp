@@ -29,6 +29,8 @@ export default class Seawatch {
 
   removeStorage() {
     localStorage.removeItem('seawatch');
+    this.seawatch = {};
+    this.hasRecord = false;
   }
 
   readStorage() {

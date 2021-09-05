@@ -37,7 +37,7 @@ p {
 
 .title {
   padding: 0;
-  margin: 0;
+  margin: 0 0 1rem 0;
 }
 
 .form-input-label,
@@ -52,6 +52,9 @@ p {
   }
 }
 
+.bold {
+  font-weight: bold;
+}
 .cancel {
   width: 12rem;
   margin: 0 auto;
@@ -61,7 +64,7 @@ p {
   display: block;
   padding: 0 35px 0 35px;
   font-size: 15px;
-  background-color: $light-blue;
+  background-color: $red;
   color: white;
   text-transform: uppercase;
   font-weight: bolder;
@@ -73,7 +76,13 @@ p {
   &:hover {
     background-color: $light-orange;
   }
+
+  &-seawatch {
+    max-width: 20rem;
+    width: auto;
+  }
 }
+
 .highlight {
   color: $light-orange;
 }
@@ -119,4 +128,43 @@ p {
   text-align: center;
   color: $red;
   margin-bottom: 1rem;
+}
+
+.review {
+  border: 1px solid $dark-orange;
+  background-color: white;
+  color: $grey-6;
+  width: 96%;
+  margin: 0 auto 1.5rem auto;
+  padding: 1.5rem;
+}
+
+.review-page {
+  padding: 1.5rem;
+}
+
+.button-container {
+  padding-bottom: 2rem;
+}
+
+.continue {
+  max-width: 50rem;
+  width: auto;
+  height: 50px;
+  letter-spacing: 0.5px;
+  line-height: 50px;
+  padding: 1.5rem 35px;
+  font-size: 15px;
+  background-color: $dark-orange;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bolder;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    background-color: $light-blue;
+    border: 1px solid black;
+  }
 }

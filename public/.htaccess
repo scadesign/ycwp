@@ -7,8 +7,10 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f 
 
 RewriteRule      ^tasks/([A-Za-z0-9_-]+)/?$          data/controller/app.php?task=$1        [L]
-RewriteRule      ^totals/([A-Za-z0-9_-]+)/?$          data/controller/seawatch.php?filter=$1        [L]
-RewriteRule      ^totals$                             data/controller/seawatch.php        [L]
+RewriteRule      ^totals/([A-Za-z0-9_-]+)/?$         data/controller/seawatch.php?filter=$1        [L]
+RewriteRule      ^totals$                            data/controller/seawatch.php        [L]
+
+RewriteRule      ^seawatch$                          data/controller/seawatch.php        [L]
 
 RewriteRule      ^users$                             data/controller/volunteer.php                 [L]
 

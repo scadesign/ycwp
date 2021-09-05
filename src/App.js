@@ -16,6 +16,8 @@ import SignUp from "./views/sign-up/sign-up";
 import Sighting from './models/sighting';
 import Environment from './models/environment';
 import Seawatch from './models/seawatch';
+import Review from './views/review/review';
+import Cancel from './views/cancel/cancel'
 
 
 function _ScrollToTop(props) {
@@ -69,8 +71,21 @@ class App extends Component {
                   sighting={this.state.sighting}
                   seawatch={this.state.seawatch}
                   environment={this.state.environment}/>
-                  )
-                  
+                  )   
+              }/>
+               <Route path="/review" render={props => 
+                (<Review {...props} 
+                  sighting={this.state.sighting}
+                  seawatch={this.state.seawatch}
+                  environment={this.state.environment}/>
+                  )   
+              }/>
+              <Route path="/cancel" render={props => 
+                (<Cancel {...props} 
+                  sighting={this.state.sighting}
+                  seawatch={this.state.seawatch}
+                  environment={this.state.environment}/>
+                  )   
               }/>
               <Route path="/view-sightings" exact component={Results} />
             </Switch>
