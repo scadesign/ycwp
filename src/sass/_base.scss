@@ -79,4 +79,16 @@ body {
   text-align: center;
   margin-top: 3rem;
   margin-bottom: 1rem;
+  z-index: 5000;
+}
+
+#maps {
+  height: 500px;
+  width: 900px;
+  margin: 0 auto 10rem auto;
+  position: relative;
+
+  @include respond(tab-port) {
+    width: 100%;
+  }
 }

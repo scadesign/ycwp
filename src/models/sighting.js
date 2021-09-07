@@ -28,7 +28,6 @@ export default class Sighting {
 
   getlastItem (){
     const last = this.items.length-1;
-    
     return last;
   }
 
@@ -67,7 +66,7 @@ export default class Sighting {
     const storage = JSON.parse(localStorage.getItem('sightings'));
     if(storage) {
       this.items = storage;
-      this.numItems = storage.length +1;
+      this.numItems = storage.length;
     }
   }
   

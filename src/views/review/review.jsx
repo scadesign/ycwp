@@ -22,8 +22,7 @@ class Review extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log(this.state.status);
-    const date = `${this.state.date} ${this.state.hours}:${this.state.mins}`;
+
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': this.props.seawatch.seawatch.access_token

@@ -10,8 +10,8 @@ import {
 import { Home } from "./views/home/home.page";
 import EnvironmentView  from "./views/environment/environment";
 import SightingView from "./views/sighting/sighting";
-import { Results } from "./views/results/results";
-import  SignIn  from "./views/sign-in/sign-in";
+import Results from "./views/results/results";
+import SignIn  from "./views/sign-in/sign-in";
 import SignUp from "./views/sign-up/sign-up";
 import Sighting from './models/sighting';
 import Environment from './models/environment';

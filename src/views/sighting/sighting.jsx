@@ -29,20 +29,18 @@ class SightingView extends React.Component {
   }
 
   emptyState() {
-    this.state = {
-      start: '',
-      end: '',
-      species: '',
-      confidence: '',
-      groupsize: '',
-      calves: '',
-      juveniles: '',
-      bearing: '',
-      distance: '',
-      behaviour: '',
-      birds: '',
-      messages: ''
-    }
+    this.setState({start: ''}) 
+    this.setState({end: ''}) 
+    this.setState({species: ''})
+    this.setState({confidence: ''})
+    this.setState({groupSize: ''})
+    this.setState({calves: ''})
+    this.setState({juveniles: ''})
+    this.setState({bearing: ''})
+    this.setState({distance: ''})
+    this.setState({behaviour: ''})
+    this.setState({birds: ''})
+    this.setState({messages: ''})
   }
 
   handleSubmit = (event) => {
@@ -70,6 +68,7 @@ class SightingView extends React.Component {
 
   render() {
     this.props.environment.updated = false;
+    console.log(this.props.sighting.numItems)
     const { start, end, species, confidence, groupsize, calves, juveniles, bearing, distance, behaviour, birds} = this.state;
     if(!this.props.seawatch.hasRecord){
       return <Redirect to="/sign-in" />

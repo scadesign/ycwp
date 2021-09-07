@@ -324,10 +324,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $response->send();
                         exit;
                     }
-                    //delete the session
-                    $query = $dB->prepare('delete from tblsessions where accesstoken = :accesstoken');
-                    $query->bindParam('accesstoken', $access_token, PDO::PARAM_STR);
-                    $query->execute();
                 } catch (PDOException $e) {
                     $response = new Response();
                     $response->setHttpStatusCode(500);
@@ -344,6 +340,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response->setSuccess(True);
             $response->addMessage("SeaWatch submitted successfully");
             $response->send();
+
+            //delete the session
+            $query = $dB->prepare('delete from tblsessions where accesstoken = :accesstoken');
+            $query->bindParam('accesstoken', $access_token, PDO::PARAM_STR);
+            $query->execute();
+
             exit;
         }
     } catch (SeaWatchException $e) {
@@ -388,9 +390,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
         $stationId = $row['id'];
 
-        $stationQuery = $dB->prepare('select sighting.id from sighting where sighting.station = :station');
+        $stationQuery = $dB->prepare('select COUNT(sighting.id) as total from sighting, seawatch where seawatch.station = :station AND sighting.seawatch = seawatch.id');
         $stationQuery->bindParam(':station', $stationId, PDO::PARAM_INT);
         $stationQuery->execute();
+        $stationRow = $stationQuery->fetch(PDO::FETCH_ASSOC);
 
 
         $station = array();
@@ -398,14 +401,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $station['name'] = $row['name'];
         $station['latitude'] = $row['latitude'];
         $station['longitude'] = $row['longitude'];
-        $station['total'] = $stationQuery->rowCount();
+        $station['total'] = $stationRow['total'];
 
         $stations[] = $station;
     }
     $response = new Response();
     $response->setHttpStatusCode(200);
     $response->setSuccess(True);
-    $response->addMessage("SeaWatch submitted successfully");
     $response->setdata($stations);
     $response->send();
     exit;

@@ -68,10 +68,10 @@ class SignIn extends React.Component {
     this.props.environment.updated = false;
     const { email, password, messages} = this.state;
     if(this.state.status) {
-      return <div>
+      return <div className='centre'>
         <LargeHeader />
           <h2 className="title centre">Welcome Back {this.state.first_name}</h2>
-        <Link to='/add-environment' className="cancel">Continue</Link>
+        <Link to='/add-environment' className="continue">Continue</Link>
         </div>
     }else if(this.props.seawatch.hasRecord) {
       return <Redirect to='/add-environment' />
