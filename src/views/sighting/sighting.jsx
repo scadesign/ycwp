@@ -8,6 +8,7 @@ import MenuItem from '../../components/menu/menu.component';
 import Header from "../../components/header/header.component";
 import StatusIndicator from '../../components/statusIndicator/statusIndicator';
 
+
 class SightingView extends React.Component {
   constructor(props) {
     super(props);

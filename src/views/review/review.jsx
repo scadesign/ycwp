@@ -53,11 +53,15 @@ class Review extends React.Component {
     }
     if(this.state.status ){
       return (
-        <div  className="page review-page centre">
+        <div>
+          <Header />
+          <div  className="page review-page centre">
           <h2 className="title centre">Review</h2>
           <h3 className='centre'>Seawatch Submitted successfully</h3>
           <Link to='/' className='continue centre'>Continue</Link>
         </div>
+        </div>
+        
       )
     }
     return (
@@ -77,7 +81,8 @@ class Review extends React.Component {
           
            <div>
              <h3>Environment recordings</h3>
-              { this.props.environment.items.map(({ id, start, end, seaState, swellHeight, windDirection, visibility, notes}) => (
+             <div className="review-four">
+               { this.props.environment.items.map(({ id, start, end, seaState, swellHeight, windDirection, visibility, notes}) => (
                 <EnvironmentReview key={id} 
                 start = {start} end = {end} 
                 seaState={seaState} 
@@ -87,10 +92,13 @@ class Review extends React.Component {
                 notes={notes}/>
               ))
               }
+             </div>
+             
            </div>
 
             <div>
              <h3>Sighting recordings</h3>
+             <div className="review-two">
               { this.props.sighting.items.map(({ id, start, end, species, confidence, groupSize, calves, juveniles, bearing, distance, behaviour, associatedBirds}) => (
                 <SightingReview key={id} 
                 start = {start} end = {end} 
@@ -105,6 +113,7 @@ class Review extends React.Component {
                 associatedBirds={associatedBirds}/>
               ))
               }
+              </div>
            </div>
             
             <form className="button-container" onSubmit={this.handleSubmit}>

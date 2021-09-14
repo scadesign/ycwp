@@ -37,6 +37,12 @@ breakpoint argument choices
       @content;
     } // 600px
   }
+
+  @if $breakpoint == phone-land {
+    @media only screen and (max-width: 41.8em) {
+      @content;
+    } // 670px
+  }
   @if $breakpoint == tab-port {
     @media only screen and (max-width: 56.25em) {
       @content;

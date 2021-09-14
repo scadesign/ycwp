@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import LargeHeader from "../../components/large-header/large-header.component";
 import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
 import './result.styles.scss';
+import Select from '../../components/select/select.component';
 
 //import mapData from '../../data/geo';
 import axios from "axios";
@@ -19,7 +20,8 @@ class Results extends React.Component {
       status: false,
       lat: 54.11577294581963,
       lng: -0.0054931640625,
-      zoom: 9
+      zoom: 9,
+      species:''
     };
   }
 
@@ -43,6 +45,11 @@ class Results extends React.Component {
       console.log(error);
     })
   };
+
+  handleChange = (event) => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
+  };
     
 
   render() {
@@ -56,7 +63,17 @@ class Results extends React.Component {
         <LargeHeader />
         <div className="sightings page">
           <h3 className="title centre">Number of Sightings by station</h3>
+         
           <div id='maps'>
+             <Select
+              name="filter"
+              task="species"
+              value={this.state.filter}
+              handleChange={this.handleChange}
+              required
+              label="filter"
+              title="filter"
+            />
             <MapContainer 
                  center={[this.state.lat, this.state.lng]} 
                  zoom={this.state.zoom} 

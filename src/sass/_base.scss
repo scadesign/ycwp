@@ -64,6 +64,33 @@ body {
   }
 }
 
+.review-four {
+  display: grid;
+  grid-template-columns: repeat(4, 23.5%);
+  gap: 2%;
+
+  @include respond(tab-land) {
+    grid-template-columns: repeat(2, 48%);
+    gap: 4%;
+  }
+
+  @include respond(phone) {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.review-two {
+  display: grid;
+  grid-template-columns: repeat(2, 48%);
+  gap: 4%;
+
+  @include respond(tab-land) {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}
+
 .three-up {
   display: grid;
   grid-template-columns: repeat(3, 32%);
@@ -85,7 +112,7 @@ body {
 #maps {
   height: 500px;
   width: 900px;
-  margin: 0 auto 10rem auto;
+  margin: 0 auto 15rem auto;
   position: relative;
 
   @include respond(tab-port) {

@@ -74,7 +74,7 @@ class Sighting
 
     public function getJuveniles()
     {
-        return $this->_juveniles;
+        return $this->_juveniless;
     }
 
     public function getBearing()
@@ -174,11 +174,11 @@ class Sighting
     public function setJuveniles($juveniles)
     {
 
-        if (($juveniles !== null) && (!is_numeric($juveniles) || $juveniles < 0 || $juveniles > 9223372036854775807 || $this->_juveniles !== null)) {
+        if (($juveniles !== null) && (!is_numeric($juveniles) || $juveniles < 0 || $juveniles > 9223372036854775807 || $this->_juveniless !== null)) {
             throw new SightingException("Number of juveniles error");
         }
 
-        $this->_juveniles = $juveniles;
+        $this->_juveniless = $juveniles;
     }
 
     public function setBearing($bearing)

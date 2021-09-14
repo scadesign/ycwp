@@ -328,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $response = new Response();
                     $response->setHttpStatusCode(500);
                     $response->setSuccess(false);
-                    $response->addMessage("There was an issue matching some sightings data");
+                    $response->addMessage($e);
                     $response->send();
                     exit;
                 }
@@ -342,7 +342,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response->send();
 
             //delete the session
-            $query = $dB->prepare('delete from tblsessions where accesstoken = :accesstoken');
+            $query = $dB->prepare('delete from sessions where access_token = :accesstoken');
             $query->bindParam('accesstoken', $access_token, PDO::PARAM_STR);
             $query->execute();
 
