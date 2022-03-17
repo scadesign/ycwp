@@ -1,18 +1,16 @@
-
 export default class Seawatch {
   constructor() {
-    this.seawatch = {
-    };
+    this.seawatch = {};
     this.hasRecord = false;
-  };
+  }
 
-  addRecord (session_id, access_token, station, name, date) {
+  addRecord(station, name, email, telephone, date) {
     this.seawatch = {
-      session_id,
-      access_token, 
-      station, 
-      name, 
-      date
+      station,
+      name,
+      email,
+      telephone,
+      date,
     };
 
     this.addStorage();
@@ -20,7 +18,11 @@ export default class Seawatch {
   }
 
   getName() {
-    return this.seawatch.name
+    return this.seawatch.name;
+  }
+
+  getLastItem() {
+    return this.seawatch;
   }
 
   addStorage() {
@@ -35,10 +37,9 @@ export default class Seawatch {
 
   readStorage() {
     const storage = JSON.parse(localStorage.getItem('seawatch'));
-    if(storage) {
+    if (storage) {
       this.seawatch = storage;
       this.hasRecord = true;
     }
   }
-
 }

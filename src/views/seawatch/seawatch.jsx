@@ -5,16 +5,17 @@ import Select from '../../components/select/select.component';
 import Input from '../../components/input/input.component';
 import Button from '../../components/button/button.component';
 import LargeHeader from '../../components/large-header/large-header.component';
-import './sign-in.styles.scss';
-import axios from 'axios';
+import { stations } from '../../select-data/data';
+import './seawatch.styles.scss';
 
-class SignIn extends React.Component {
+class SeawatchView extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      name: '',
       email: '',
-      password: '',
+      telephone: '',
       station: '',
       status: false,
       date: new Date().toLocaleDateString(),
@@ -23,34 +24,22 @@ class SignIn extends React.Component {
     };
   }
 
+  updateFields = () => {
+    this.props.seawatch.readStorage();
+    const newItem = this.props.seawatch.getLastItem();
+    this.setState({ name: newItem.name });
+    this.setState({ email: newItem.email });
+    this.setState({ telephone: newItem.telephone });
+    this.setState({ station: newItem.station });
+    this.setState({ date: newItem.date });
+  };
+
   handleSubmit = (event) => {
     event.preventDefault();
-
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-    const signUp = {
-      email: this.state.email,
-      password: this.state.password,
-      first_name: '',
-    };
-    axios
-      .post('http://ycwp.test/sessions', signUp, { headers: headers })
-      .then((response) => {
-        this.setState({ status: true });
-        this.setState({ first_name: response.data.data.first_name });
-
-        const date = `${this.state.date} ${this.state.hours}:${this.state.mins}`;
-        console.log(date);
-
-        this.props.seawatch.addRecord(response.data.data.session_id, response.data.data.access_token, this.state.station, response.data.data.first_name, date);
-        this.setState({ status: true });
-
-        this.props.seawatch.readStorage();
-      })
-      .catch((error) => {
-        this.setState({ messages: error.response.data.messages });
-      });
+    this.props.seawatch.addRecord(this.state.station, this.state.name, this.state.email, this.state.telephone, this.state.date);
+    this.updateFields();
+    window.location.reload();
+    this.setState({ status: true });
   };
 
   handleChange = (event) => {
@@ -59,13 +48,13 @@ class SignIn extends React.Component {
   };
 
   render() {
-    this.props.environment.updated = false;
-    const { email, password, messages } = this.state;
+    const { name, email, telephone, messages } = this.state;
+    console.log(this.props.seawatch);
     if (this.state.status) {
       return (
         <div className="centre">
           <LargeHeader />
-          <h2 className="title centre">Welcome Back {this.state.first_name}</h2>
+          <h2 className="title centre">Hi {this.state.name}</h2>
           <Link to="/add-environment" className="continue">
             Continue
           </Link>
@@ -77,20 +66,22 @@ class SignIn extends React.Component {
     return (
       <div>
         <LargeHeader />
-        <div className="sign-in">
-          <h2 className="title centre">Sign In</h2>
+        <div className="seawatch">
+          <h2 className="title centre">Seawatch station</h2>
           <form onSubmit={this.handleSubmit}>
-            <div className="sign-in-inputs">
+            <div className="seawatch-inputs">
+              <Input name="name" type="text" value={name} handleChange={this.handleChange} required label="name" title="Name" />
+
               <Input name="email" type="email" value={email} handleChange={this.handleChange} required label="email" title="Email" />
 
-              <Input name="password" type="password" value={password} handleChange={this.handleChange} required label="password" title="Password" />
+              <Input name="telephone" type="text" value={telephone} handleChange={this.handleChange} required label="telephone" title="Telephone" />
 
-              <Select name="station" task="station" value={this.state.station} handleChange={this.handleChange} required label="station" title="station" />
+              <Select name="station" tasks={stations} handleChange={this.handleChange} required label="station" title="station" />
             </div>
             <div className="button-container">
               {messages !== '' ? <div className="message">{messages}</div> : <div></div>}
               <Button type="submit" value="submit">
-                Sign In
+                creat Seawatch
               </Button>
             </div>
           </form>
@@ -105,4 +96,4 @@ class SignIn extends React.Component {
   }
 }
 
-export default SignIn;
+export default SeawatchView;

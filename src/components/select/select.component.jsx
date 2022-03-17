@@ -1,38 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import './select.styles.scss';
 
-const Select = ({task, handleChange, label, title, ...otherProps }) => {
-
-  const [data, setData] = useState([]);
-  
-  useEffect(() => {
-    fetch(`tasks/${task}`)
-      .then((response) => response.json())
-      .then((json) => setData(json.data.task))
-      .catch((error) => console.error(error))
-      
-  }, [task]);
-
- 
-
+const Select = ({ tasks, handleChange, label, title, ...otherProps }) => {
   return (
     <span>
-    { label ? 
-            ( <label htmlFor={label} className='select-label'>
-                    {title}
-                </label>
-            ) : null 
-    }
-    <select className='select' onChange={handleChange} {...otherProps}>
-      <option value="">Please Select</option>
-      {data.map(tasks => (
-            <option key={tasks.id} value={tasks.task}>{tasks.task}</option>
+      {label ? (
+        <label htmlFor={label} className="select-label">
+          {title}
+        </label>
+      ) : null}
+      <select className="select" onChange={handleChange} {...otherProps}>
+        <option value="">Please Select</option>
+        {tasks.map((task) => (
+          <option key={task.id} value={task.name}>
+            {task.name}
+          </option>
         ))}
-    </select>
+      </select>
     </span>
-   
   );
 };
 
-export default Select
+export default Select;

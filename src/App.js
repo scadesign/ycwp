@@ -1,24 +1,18 @@
-import React, { useEffect, Component } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useLocation,
-  withRouter,
-} from "react-router-dom";
+import React, { useEffect, Component } from 'react';
+import { BrowserRouter as Router, Switch, Route, useLocation, withRouter } from 'react-router-dom';
 
-import { Home } from "./views/home/home.page";
-import EnvironmentView  from "./views/environment/environment";
-import SightingView from "./views/sighting/sighting";
-import Results from "./views/results/results";
-import SignIn  from "./views/sign-in/sign-in";
-import SignUp from "./views/sign-up/sign-up";
+import { Home } from './views/home/home.page';
+import EnvironmentView from './views/environment/environment';
+import SightingView from './views/sighting/sighting';
+import Results from './views/results/results';
+import SignIn from './views/sign-in/sign-in';
+import SignUp from './views/sign-up/sign-up';
 import Sighting from './models/sighting';
 import Environment from './models/environment';
 import Seawatch from './models/seawatch';
 import Review from './views/review/review';
-import Cancel from './views/cancel/cancel'
-
+import Cancel from './views/cancel/cancel';
+import SeawatchView from './views/seawatch/seawatch';
 
 function _ScrollToTop(props) {
   const { pathname } = useLocation();
@@ -31,13 +25,12 @@ function _ScrollToTop(props) {
 
 const ScrollToTop = withRouter(_ScrollToTop);
 
-
 class App extends Component {
-  state ={
+  state = {
     sighting: new Sighting(),
     environment: new Environment(),
-    seawatch: new Seawatch()
-  }
+    seawatch: new Seawatch(),
+  };
 
   readStorage() {
     this.state.sighting.readStorage();
@@ -55,38 +48,13 @@ class App extends Component {
           <div className="content">
             <Switch>
               <Route path="/" exact component={Home} />
+              <Route path="/seawatch" render={(props) => <SeawatchView {...props} seawatch={this.state.seawatch} />} />
               <Route path="/sign-up" exact component={SignUp} />
-              <Route path="/sign-in" render={props => 
-                (<SignIn {...props} 
-                  seawatch={this.state.seawatch}
-                  environment={this.state.environment}/>)
-              }/>
-              <Route path="/add-environment" render={props => 
-                (<EnvironmentView {...props} 
-                  environment={this.state.environment}
-                  seawatch={this.state.seawatch}/>)
-              }/>
-              <Route path="/add-sighting" render={props => 
-                (<SightingView {...props} 
-                  sighting={this.state.sighting}
-                  seawatch={this.state.seawatch}
-                  environment={this.state.environment}/>
-                  )   
-              }/>
-               <Route path="/review" render={props => 
-                (<Review {...props} 
-                  sighting={this.state.sighting}
-                  seawatch={this.state.seawatch}
-                  environment={this.state.environment}/>
-                  )   
-              }/>
-              <Route path="/cancel" render={props => 
-                (<Cancel {...props} 
-                  sighting={this.state.sighting}
-                  seawatch={this.state.seawatch}
-                  environment={this.state.environment}/>
-                  )   
-              }/>
+              <Route path="/sign-in" render={(props) => <SignIn {...props} seawatch={this.state.seawatch} environment={this.state.environment} />} />
+              <Route path="/add-environment" render={(props) => <EnvironmentView {...props} environment={this.state.environment} seawatch={this.state.seawatch} />} />
+              <Route path="/add-sighting" render={(props) => <SightingView {...props} sighting={this.state.sighting} seawatch={this.state.seawatch} environment={this.state.environment} />} />
+              <Route path="/review" render={(props) => <Review {...props} sighting={this.state.sighting} seawatch={this.state.seawatch} environment={this.state.environment} />} />
+              <Route path="/cancel" render={(props) => <Cancel {...props} sighting={this.state.sighting} seawatch={this.state.seawatch} environment={this.state.environment} />} />
               <Route path="/view-sightings" exact component={Results} />
             </Switch>
           </div>

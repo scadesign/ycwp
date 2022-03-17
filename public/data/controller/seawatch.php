@@ -27,58 +27,7 @@ try {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // check the volunteer has aready signed in
-    if (!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION']) < 1) {
-        $response = new Response();
-        $response->setHttpStatusCode(401);
-        $response->setSuccess(false);
-        (!isset($_SERVER['HTTP_AUTHORIZATION']) ? $response->addMessage("Access token is missing from the header") : false);
-        (strlen($_SERVER['HTTP_AUTHORIZATION']) < 1 ? $response->addMessage("Access token cannot be blank") : false);
-        $response->send();
-        exit;
-    }
-
-    $access_token = $_SERVER['HTTP_AUTHORIZATION'];
-
-    try {
-
-        $query = $dB->prepare('select volunteer, access_expiry from sessions, volunteer where sessions.volunteer = volunteer.id and access_token = :accesstoken');
-        $query->bindParam(':accesstoken', $access_token, PDO::PARAM_STR);
-        $query->execute();
-
-        $rowCount = $query->rowCount();
-
-        if ($rowCount === 0) {
-            $response = new Response();
-            $response->setHttpStatusCode(401);
-            $response->setSuccess(false);
-            $response->addMessage("Invalid access token");
-            $response->send();
-            exit;
-        }
-
-        $row = $query->fetch(PDO::FETCH_ASSOC);
-        $returned_userid = $row['volunteer'];
-        $returned_accesstokenexpiry = $row['access_expiry'];
-
-        if (strtotime($returned_accesstokenexpiry) < time()) {
-            $response = new Response();
-            $response->setHttpStatusCode(401);
-            $response->setSuccess(false);
-            $response->addMessage("Access token expired");
-            $response->send();
-            exit;
-        }
-    } catch (PDOException $e) {
-        $response = new Response();
-        $response->setHttpStatusCode(500);
-        $response->setSuccess(false);
-        $response->addMessage("There was an issue authenticating - please try again" . $e);
-        $response->send();
-        exit;
-    }
-    // end auth script
-
+    
     try {
         // check there is data and it is valid json
         if ($_SERVER['CONTENT_TYPE'] !== 'application/json') {
