@@ -1,7 +1,7 @@
-@import "../../sass/variables";
-@import "../../sass/mixins";
-.navigation {
-  background: $dark-orange;
+import styled from 'styled-components';
+
+export const Navigation = styled.div`
+  background: #e95100;
   z-index: 3000;
 
   & ul {
@@ -11,36 +11,37 @@
     margin: 0 auto;
     z-index: 3200;
 
-    @include respond(phone) {
+    @media only screen and (max-width: 37.5em) {
       grid-template-columns: repeat(4, 25%);
       font-size: 1.5rem;
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      border-top: 1px solid $dark-blue;
+      border-top: 1px solid #1f4564;
     }
+
 
     & a {
       padding: 1rem;
-      color: $white;
+      color: #fff;
       text-decoration: none;
       width: 100%;
       text-align: center;
-      border-right: 1px solid $white;
+      border-right: 1px solid #fff;
 
       &:first-child {
-        border-left: 1px solid $white;
+        border-left: 1px solid #fff;
       }
 
       &:hover {
-        background: $red;
+        background: #990202;
       }
 
       @include respond(phone) {
         padding: 1rem 0.6rem;
         &:not(:last-child) {
-          border-right: 1px solid $white;
+          border-right: 1px solid #fff;
         }
         &:first-child {
           border-left: none;
@@ -51,5 +52,4 @@
         list-style: none;
       }
     }
-  }
-}
+`;

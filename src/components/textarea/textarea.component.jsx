@@ -1,24 +1,14 @@
 import React from 'react';
 
-import './textarea.styles.scss';
+import { TextAreaComponent } from './textarea.styles';
 
-const TextArea = ({handleChange, label, title, ...otherProps }) => {
-
-  
+const TextArea = ({ handleChange, label, title, ...otherProps }) => {
   return (
     <span>
-    { label ? 
-            ( <label htmlFor={label}>
-                    {title}
-                </label>
-            ) : null 
-    }
-    <textarea className='textarea' onChange={handleChange} {...otherProps}>
-      
-    </textarea>
+      {label ? <label htmlFor={label}>{title}</label> : null}
+      <TextAreaComponent onChange={handleChange} {...otherProps}></TextAreaComponent>
     </span>
-   
   );
 };
 
-export default TextArea
+export default TextArea;

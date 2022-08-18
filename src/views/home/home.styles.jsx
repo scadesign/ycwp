@@ -1,10 +1,12 @@
-@import "../../sass/mixins";
-@import "../../sass//variables";
+import styled from 'styled-components';
 
-.homepage {
+import { Page } from '../../styles/base';
+
+export const HomePage = styled(Page)`
   margin-top: 1rem;
-}
-.home {
+`;
+
+export const HomeContainer = styled.ul`
   width: 30rem;
   margin: 5rem auto 0 auto;
   display: grid;
@@ -17,18 +19,18 @@
 
     & a {
       display: block;
-      background: $dark-orange;
+      background: #e95100;
       border-radius: 1rem;
       padding: 1.5rem;
       text-transform: uppercase;
       font-weight: 800;
-      color: $white;
+      color: #fff;
       text-decoration: none;
       cursor: pointer;
 
       &:hover {
-        background: $light-blue;
+        background: #2998ff;
       }
     }
   }
-}
+`;

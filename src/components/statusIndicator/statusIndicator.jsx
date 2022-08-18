@@ -1,18 +1,16 @@
-import React from "react";
+import React from 'react';
 
-import './statusIndicator.scss';
+import { StatusTitle, StatusNumber } from './statusIndicator-styles';
 
-
-
-const StatusIndicator = ({numberItems, ...otherProps }) => {
-
-  
+const StatusIndicator = ({ numberItems, ...otherProps }) => {
   return (
     <div>
-        <h3 className="status-title" {...otherProps}> Number Submitted<span className='status-number'>{numberItems}</span></h3>
+      <StatusTitle {...otherProps}>
+        {' '}
+        Number Submitted<StatusNumber>{numberItems}</StatusNumber>
+      </StatusTitle>
     </div>
-   
   );
 };
 
-export default StatusIndicator
+export default StatusIndicator;

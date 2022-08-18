@@ -1,16 +1,14 @@
 import React from 'react';
 
-import './header.styles.scss';
+import { HeaderContainer, HeaderLogo, HeaderH2 } from './header.styles';
 
 const Header = () => {
-    return(
-        <div className="header">
-            <img className ="header_logo" src="logo512.png" alt="Cetacean Watch" />
-            <h2 className="header_title">The Yorkshire Cetacean Watch Project</h2>      
-        </div>
-        
-       
-    )
-}
+  return (
+    <HeaderContainer>
+      <HeaderLogo src="logo512.png" alt="Cetacean Watch" />
+      <HeaderH2>The Yorkshire Cetacean Watch Project</HeaderH2>
+    </HeaderContainer>
+  );
+};
 
 export default Header;

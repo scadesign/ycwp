@@ -1,11 +1,13 @@
 import React from 'react';
 
-import './seawatch-review.styles.scss';
+import { Review, Bold } from '../environment-review/environment-review.styles';
 
-const SeawatchReview  = ({ station, name, date, ...otherProps }) => (
-    <div className='review'>
-        <p><span className="bold">Name:</span> {name} <span className="bold">Station:</span> {station} <span className="bold">Date:</span> {date}</p> 
-    </div>
-)
+const SeawatchReview = ({ station, name, date, ...otherProps }) => (
+  <Review>
+    <p>
+      <Bold>Name:</Bold> {name} <Bold>Station:</Bold> {station} <Bold>Date:</Bold> {date}
+    </p>
+  </Review>
+);
 
 export default SeawatchReview;

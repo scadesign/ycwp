@@ -1,14 +1,11 @@
 import React from 'react';
 
-import './button.styles.scss';
+import { ButtonStyle } from './button.styles';
 
-const Button = ({ children,  ...otherProps }) => (
-  <button
-    className='button' 
-    {...otherProps}
-  >
+const Button = ({ children, ...otherProps }) => (
+  <ButtonStyle className="button" {...otherProps}>
     {children}
-  </button>
+  </ButtonStyle>
 );
 
 export default Button;

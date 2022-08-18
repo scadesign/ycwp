@@ -1,6 +1,6 @@
-@import "../../sass/mixins";
-@import "../../sass//variables";
-.button {
+import styled from 'styled-components';
+
+export const ButtonStyle = styled.button`
   max-width: 50rem;
   width: auto;
   height: 50px;
@@ -8,7 +8,7 @@
   line-height: 50px;
   padding: 0 35px 0 35px;
   font-size: 15px;
-  background-color: $dark-orange;
+  background-color: #e95100;
   color: white;
   text-transform: uppercase;
   font-weight: bolder;
@@ -16,7 +16,7 @@
   cursor: pointer;
 
   &:hover {
-    background-color: $light-blue;
+    background-color: #2998ff;
     border: 1px solid black;
   }
-}
+`;
