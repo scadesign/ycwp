@@ -7,6 +7,7 @@ import Button from '../../components/button/button.component';
 import LargeHeader from '../../components/large-header/large-header.component';
 import axios from 'axios';
 import { SignInComponent } from './sign-in.styles';
+import { ButtonContainer } from '../../styles/base';
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -86,12 +87,12 @@ class SignIn extends React.Component {
 
               <Select name="station" task="station" value={this.state.station} handleChange={this.handleChange} required label="station" title="station" />
             </div>
-            <div className="button-container">
+            <ButtonContainer>
               {messages !== '' ? <div className="message">{messages}</div> : <div></div>}
               <Button type="submit" value="submit">
                 Sign In
               </Button>
-            </div>
+            </ButtonContainer>
           </form>
           <div>
             <Link to="/" className="cancel">

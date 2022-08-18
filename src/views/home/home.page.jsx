@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import LargeHeader from '../../components/large-header/large-header.component';
 import { HomePage, HomeContainer } from './home.styles';
 
-import './home.styles.scss';
-
 export const Home = () => {
   return (
     <HomePage>

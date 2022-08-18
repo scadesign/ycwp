@@ -10,15 +10,17 @@ export const Navigation = styled.div`
     grid-template-columns: repeat(4, 15rem);
     margin: 0 auto;
     z-index: 3200;
+    list-style: none;
 
     @media only screen and (max-width: 37.5em) {
-      grid-template-columns: repeat(4, 25%);
+      grid-template-columns: 1fr 1.2fr 1fr 1fr;
       font-size: 1.5rem;
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
       border-top: 1px solid #1f4564;
+      background: #e95100;
     }
 
 

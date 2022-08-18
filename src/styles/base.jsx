@@ -64,14 +64,3 @@ export const FormButtonContainer = styled.form`
   z-index: 5000;
   padding-bottom: 2rem;
 `;
-
-export const FormInputLabel = styled.label`
-  color: #fff;
-  font-size: 16px;
-  font-weight: normal;
-  pointer-events: none;
-
-  @media only screen and (max-width: 56.25em) {
-    font-size: 14px;
-  }
-`;
